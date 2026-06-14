@@ -5,9 +5,16 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "CareerHub — AI Job Application Tracker" },
-      { name: "description", content: "Track applications, discover matched roles, and accelerate your career in one intelligent workspace." },
+      {
+        name: "description",
+        content:
+          "Track applications, discover matched roles, and accelerate your career in one intelligent workspace.",
+      },
       { property: "og:title", content: "CareerHub — AI Job Application Tracker" },
-      { property: "og:description", content: "Your intelligent workspace for every career opportunity." },
+      {
+        property: "og:description",
+        content: "Your intelligent workspace for every career opportunity.",
+      },
     ],
   }),
   component: Index,

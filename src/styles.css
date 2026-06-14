@@ -165,7 +165,9 @@
     color: var(--color-foreground);
     font-family: var(--font-sans);
     min-width: 320px;
-    transition: background-color 400ms ease, color 400ms ease;
+    transition:
+      background-color 400ms ease,
+      color 400ms ease;
   }
 }
 
@@ -179,12 +181,26 @@
 @utility ambient-bg {
   background-image:
     radial-gradient(circle at 12% 15%, var(--hero-glow), transparent 28%),
-    radial-gradient(circle at 88% 82%, color-mix(in oklab, var(--primary) 16%, transparent), transparent 32%);
+    radial-gradient(
+      circle at 88% 82%,
+      color-mix(in oklab, var(--primary) 16%, transparent),
+      transparent 32%
+    );
 }
 
-@keyframes float { 50% { transform: translateY(-12px) scale(1.02); } }
-@keyframes shimmer { to { transform: translateX(120%); } }
+@keyframes float {
+  50% {
+    transform: translateY(-12px) scale(1.02);
+  }
+}
+@keyframes shimmer {
+  to {
+    transform: translateX(120%);
+  }
+}
 
 @media (prefers-reduced-motion: no-preference) {
-  .ambient-float { animation: float 7s ease-in-out infinite; }
+  .ambient-float {
+    animation: float 7s ease-in-out infinite;
+  }
 }
