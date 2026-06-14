@@ -94,6 +94,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "CareerHub — AI Job Application Tracker" },
+      { name: "description", content: "Career Compass Pro is a premium SaaS candidate portal for tracking job applications and managing career growth." },
+      { property: "og:description", content: "Career Compass Pro is a premium SaaS candidate portal for tracking job applications and managing career growth." },
+      { name: "twitter:description", content: "Career Compass Pro is a premium SaaS candidate portal for tracking job applications and managing career growth." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/cd38c8e2-7d4e-4441-87fa-1fe8d0d52255/id-preview-85c43382--c7414848-9983-4c7d-a253-cafa266fb05f.lovable.app-1781453119904.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/cd38c8e2-7d4e-4441-87fa-1fe8d0d52255/id-preview-85c43382--c7414848-9983-4c7d-a253-cafa266fb05f.lovable.app-1781453119904.png" },
     ],
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
