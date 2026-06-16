@@ -1608,7 +1608,9 @@ function Messages({ user, upgrade }: { user: Candidate; upgrade: () => void }) {
                   <span className="ml-auto text-[10px] text-muted-foreground">{chat.time}</span>
                 </div>
                 <p className="text-xs text-muted-foreground">{chat.company}</p>
-                <p className="mt-1 truncate text-xs text-muted-foreground">{chat.message}</p>
+                <p className="mt-1 truncate text-xs text-muted-foreground">
+                  {threads[i].length > 0 ? threads[i][threads[i].length - 1].text : chat.message}
+                </p>
               </div>
             </button>
           ))}
