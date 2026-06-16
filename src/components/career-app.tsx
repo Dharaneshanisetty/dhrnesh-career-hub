@@ -1152,10 +1152,40 @@ function Status({ status }: { status: Application["status"] }) {
 }
 
 function Suggested({ user }: { user: Candidate }) {
-  const { addApplication } = useCareer();
+  const { addApplication, applications } = useCareer();
   const [quickOnly, setQuickOnly] = useState(false);
+  const [showSaved, setShowSaved] = useState(false);
+  const SAVED_KEY = `careerhub_saved_${user.id}`;
+  const [saved, setSaved] = useState<string[]>(() => {
+    try {
+      return JSON.parse(localStorage.getItem(SAVED_KEY) ?? "[]") as string[];
+    } catch {
+      return [];
+    }
+  });
+  const persistSaved = (next: string[]) => {
+    setSaved(next);
+    localStorage.setItem(SAVED_KEY, JSON.stringify(next));
+  };
+  const toggleSave = (jobId: string, title: string) => {
+    if (saved.includes(jobId)) {
+      persistSaved(saved.filter((id) => id !== jobId));
+      toast.success(`Removed ${title} from saved`);
+    } else {
+      persistSaved([...saved, jobId]);
+      toast.success(`Saved ${title}`);
+    }
+  };
+  const appliedKeys = new Set(
+    applications
+      .filter((a) => a.userId === user.id)
+      .map((a) => `${a.title}__${a.company}`),
+  );
+  const isApplied = (job: (typeof suggestedJobs)[number]) =>
+    appliedKeys.has(`${job.title}__${job.company}`);
   const [selected, setSelected] = useState<(typeof suggestedJobs)[number] | null>(null);
-  const jobs = suggestedJobs.filter((job) => !quickOnly || job.quick);
+  let jobs = suggestedJobs.filter((job) => !quickOnly || job.quick);
+  if (showSaved) jobs = jobs.filter((job) => saved.includes(job.id));
   const apply = () => {
     if (!selected) return;
     addApplication({
@@ -1176,16 +1206,48 @@ function Suggested({ user }: { user: Candidate }) {
       title="Roles worth your attention."
       subtitle="Recommendations shaped by your skills, experience, and application history."
       actions={
-        user.plan === "PRO" ? (
-          <label className="glass-panel flex items-center gap-3 rounded-xl px-3 py-2 text-xs font-semibold">
-            <Switch checked={quickOnly} onCheckedChange={setQuickOnly} />
-            Quick Apply only
-          </label>
-        ) : (
-          <span className="rounded-full bg-muted px-3 py-1.5 text-xs">Upgrade for Quick Apply</span>
-        )
+        <div className="flex flex-wrap items-center gap-2">
+          <Button
+            variant={showSaved ? "premium" : "glass"}
+            size="sm"
+            onClick={() => setShowSaved((s) => !s)}
+          >
+            <Bookmark />
+            {showSaved ? "Showing saved" : `Saved jobs (${saved.length})`}
+          </Button>
+          {user.plan === "PRO" ? (
+            <label className="glass-panel flex items-center gap-3 rounded-xl px-3 py-2 text-xs font-semibold">
+              <Switch checked={quickOnly} onCheckedChange={setQuickOnly} />
+              Quick Apply only
+            </label>
+          ) : (
+            <span className="rounded-full bg-muted px-3 py-1.5 text-xs">
+              Upgrade for Quick Apply
+            </span>
+          )}
+        </div>
       }
     >
+      {jobs.length === 0 ? (
+        <div className="glass-panel rounded-3xl p-10 text-center">
+          <div className="mx-auto grid size-14 place-items-center rounded-2xl bg-primary/10 text-primary">
+            <Bookmark />
+          </div>
+          <h3 className="mt-4 text-lg font-bold">
+            {showSaved ? "No saved jobs yet" : "No matching roles"}
+          </h3>
+          <p className="mt-2 text-sm text-muted-foreground">
+            {showSaved
+              ? "Tap the bookmark on any role to save it for later."
+              : "Try turning off filters to see all suggestions."}
+          </p>
+          {showSaved && (
+            <Button variant="glass" className="mt-4" onClick={() => setShowSaved(false)}>
+              Browse suggestions
+            </Button>
+          )}
+        </div>
+      ) : (
       <div className="grid gap-4 lg:grid-cols-2">
         {jobs.map((job) => (
           <article
@@ -1221,18 +1283,32 @@ function Suggested({ user }: { user: Candidate }) {
                 View role <ExternalLink />
               </Button>
               {user.plan === "PRO" && job.quick && (
-                <Button variant="premium" onClick={() => setSelected(job)} className="flex-1">
-                  <Zap />
-                  Quick Apply
-                </Button>
+                isApplied(job) ? (
+                  <Button variant="glass" disabled className="flex-1">
+                    <Check />
+                    Applied
+                  </Button>
+                ) : (
+                  <Button variant="premium" onClick={() => setSelected(job)} className="flex-1">
+                    <Zap />
+                    Quick Apply
+                  </Button>
+                )
               )}
-              <Button variant="ghost" size="icon" aria-label={`Bookmark ${job.title}`}>
-                <Bookmark />
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label={saved.includes(job.id) ? `Unsave ${job.title}` : `Save ${job.title}`}
+                onClick={() => toggleSave(job.id, job.title)}
+                className={cn(saved.includes(job.id) && "text-primary")}
+              >
+                <Bookmark fill={saved.includes(job.id) ? "currentColor" : "none"} />
               </Button>
             </div>
           </article>
         ))}
       </div>
+      )}
       <Dialog open={Boolean(selected)} onOpenChange={(open) => !open && setSelected(null)}>
         <DialogContent className="glass-panel rounded-3xl">
           <DialogHeader>
