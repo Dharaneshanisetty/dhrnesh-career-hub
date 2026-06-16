@@ -1416,29 +1416,46 @@ function Interviews({ user, upgrade }: { user: Candidate; upgrade: () => void })
           </button>
         ))}
       </div>
-      {selected && (
-        <div className="glass-panel mt-5 grid gap-4 rounded-3xl p-5 sm:grid-cols-[1fr_1fr_auto] sm:items-end">
-          <Field label="Date" type="date" value={date} onChange={setDate} />
-          <Select value={time} onValueChange={setTime}>
-            <div className="space-y-2">
-              <Label>Time slot</Label>
-              <SelectTrigger className="h-12 rounded-xl bg-glass">
-                <SelectValue placeholder="Select a time" />
-              </SelectTrigger>
-            </div>
-            <SelectContent>
-              {["10:00 AM", "12:30 PM", "3:00 PM", "5:30 PM"].map((slot) => (
-                <SelectItem value={slot} key={slot}>
-                  {slot}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Button variant="premium" disabled={!date || !time} onClick={schedule}>
-            Setup interview
-          </Button>
-        </div>
-      )}
+      <Dialog
+        open={Boolean(selected)}
+        onOpenChange={(open) => {
+          if (!open) {
+            setSelected("");
+            setDate("");
+            setTime("");
+          }
+        }}
+      >
+        <DialogContent className="glass-panel rounded-3xl">
+          <DialogHeader>
+            <DialogTitle>Schedule mock interview</DialogTitle>
+            <DialogDescription>
+              {selected ? `${selected} · 45 min · AI-assisted feedback` : ""}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4">
+            <Field label="Date" type="date" value={date} onChange={setDate} />
+            <Select value={time} onValueChange={setTime}>
+              <div className="space-y-2">
+                <Label>Time slot</Label>
+                <SelectTrigger className="h-12 rounded-xl bg-glass">
+                  <SelectValue placeholder="Select a time" />
+                </SelectTrigger>
+              </div>
+              <SelectContent>
+                {["10:00 AM", "12:30 PM", "3:00 PM", "5:30 PM"].map((slot) => (
+                  <SelectItem value={slot} key={slot}>
+                    {slot}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Button variant="premium" disabled={!date || !time} onClick={schedule}>
+              Setup interview
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </PageIntro>
   );
 }
