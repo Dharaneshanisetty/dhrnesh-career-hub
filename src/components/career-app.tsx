@@ -1373,12 +1373,12 @@ function Certifications({ user, upgrade }: { user: Candidate; upgrade: () => voi
     return (
       <PageIntro
         eyebrow="LEARNING PATHS"
-        title="Credentials that move careers."
+        title="Certifications that move careers."
         subtitle="Personalized learning matched to your next role."
       >
         <PremiumGate
           title="Unlock curated certifications"
-          copy="Explore personalized credentials across engineering, cloud, AI, and product."
+          copy="Explore personalized certifications across engineering, cloud, AI, and product."
           upgrade={upgrade}
         />
       </PageIntro>
@@ -1389,7 +1389,7 @@ function Certifications({ user, upgrade }: { user: Candidate; upgrade: () => voi
   return (
     <PageIntro
       eyebrow="LEARNING PATHS"
-      title="Credentials that move careers."
+      title="Certifications that move careers."
       subtitle="Personalized to your skills and growing interests."
       actions={
         <div className="relative">
