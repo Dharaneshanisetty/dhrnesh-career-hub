@@ -921,7 +921,10 @@ function Dashboard({
                     background: "var(--popover)",
                     border: "1px solid var(--border)",
                     borderRadius: 14,
+                    color: "var(--popover-foreground)",
                   }}
+                  labelStyle={{ color: "var(--popover-foreground)" }}
+                  itemStyle={{ color: "var(--popover-foreground)" }}
                 />
                 <Area
                   dataKey="applications"
@@ -967,7 +970,10 @@ function Dashboard({
                     background: "var(--popover)",
                     border: "1px solid var(--border)",
                     borderRadius: 14,
+                    color: "var(--popover-foreground)",
                   }}
+                  labelStyle={{ color: "var(--popover-foreground)" }}
+                  itemStyle={{ color: "var(--popover-foreground)" }}
                 />
               </PieChart>
             </ResponsiveContainer>
