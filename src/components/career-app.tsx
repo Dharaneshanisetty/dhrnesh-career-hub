@@ -921,7 +921,10 @@ function Dashboard({
                     background: "var(--popover)",
                     border: "1px solid var(--border)",
                     borderRadius: 14,
+                    color: "var(--popover-foreground)",
                   }}
+                  labelStyle={{ color: "var(--popover-foreground)" }}
+                  itemStyle={{ color: "var(--popover-foreground)" }}
                 />
                 <Area
                   dataKey="applications"
@@ -967,7 +970,10 @@ function Dashboard({
                     background: "var(--popover)",
                     border: "1px solid var(--border)",
                     borderRadius: 14,
+                    color: "var(--popover-foreground)",
                   }}
+                  labelStyle={{ color: "var(--popover-foreground)" }}
+                  itemStyle={{ color: "var(--popover-foreground)" }}
                 />
               </PieChart>
             </ResponsiveContainer>
@@ -1146,10 +1152,40 @@ function Status({ status }: { status: Application["status"] }) {
 }
 
 function Suggested({ user }: { user: Candidate }) {
-  const { addApplication } = useCareer();
+  const { addApplication, applications } = useCareer();
   const [quickOnly, setQuickOnly] = useState(false);
+  const [showSaved, setShowSaved] = useState(false);
+  const SAVED_KEY = `careerhub_saved_${user.id}`;
+  const [saved, setSaved] = useState<string[]>(() => {
+    try {
+      return JSON.parse(localStorage.getItem(SAVED_KEY) ?? "[]") as string[];
+    } catch {
+      return [];
+    }
+  });
+  const persistSaved = (next: string[]) => {
+    setSaved(next);
+    localStorage.setItem(SAVED_KEY, JSON.stringify(next));
+  };
+  const toggleSave = (jobId: string, title: string) => {
+    if (saved.includes(jobId)) {
+      persistSaved(saved.filter((id) => id !== jobId));
+      toast.success(`Removed ${title} from saved`);
+    } else {
+      persistSaved([...saved, jobId]);
+      toast.success(`Saved ${title}`);
+    }
+  };
+  const appliedKeys = new Set(
+    applications
+      .filter((a) => a.userId === user.id)
+      .map((a) => `${a.title}__${a.company}`),
+  );
+  const isApplied = (job: (typeof suggestedJobs)[number]) =>
+    appliedKeys.has(`${job.title}__${job.company}`);
   const [selected, setSelected] = useState<(typeof suggestedJobs)[number] | null>(null);
-  const jobs = suggestedJobs.filter((job) => !quickOnly || job.quick);
+  let jobs = suggestedJobs.filter((job) => !quickOnly || job.quick);
+  if (showSaved) jobs = jobs.filter((job) => saved.includes(job.id));
   const apply = () => {
     if (!selected) return;
     addApplication({
@@ -1170,16 +1206,48 @@ function Suggested({ user }: { user: Candidate }) {
       title="Roles worth your attention."
       subtitle="Recommendations shaped by your skills, experience, and application history."
       actions={
-        user.plan === "PRO" ? (
-          <label className="glass-panel flex items-center gap-3 rounded-xl px-3 py-2 text-xs font-semibold">
-            <Switch checked={quickOnly} onCheckedChange={setQuickOnly} />
-            Quick Apply only
-          </label>
-        ) : (
-          <span className="rounded-full bg-muted px-3 py-1.5 text-xs">Upgrade for Quick Apply</span>
-        )
+        <div className="flex flex-wrap items-center gap-2">
+          <Button
+            variant={showSaved ? "premium" : "glass"}
+            size="sm"
+            onClick={() => setShowSaved((s) => !s)}
+          >
+            <Bookmark />
+            {showSaved ? "Showing saved" : `Saved jobs (${saved.length})`}
+          </Button>
+          {user.plan === "PRO" ? (
+            <label className="glass-panel flex items-center gap-3 rounded-xl px-3 py-2 text-xs font-semibold">
+              <Switch checked={quickOnly} onCheckedChange={setQuickOnly} />
+              Quick Apply only
+            </label>
+          ) : (
+            <span className="rounded-full bg-muted px-3 py-1.5 text-xs">
+              Upgrade for Quick Apply
+            </span>
+          )}
+        </div>
       }
     >
+      {jobs.length === 0 ? (
+        <div className="glass-panel rounded-3xl p-10 text-center">
+          <div className="mx-auto grid size-14 place-items-center rounded-2xl bg-primary/10 text-primary">
+            <Bookmark />
+          </div>
+          <h3 className="mt-4 text-lg font-bold">
+            {showSaved ? "No saved jobs yet" : "No matching roles"}
+          </h3>
+          <p className="mt-2 text-sm text-muted-foreground">
+            {showSaved
+              ? "Tap the bookmark on any role to save it for later."
+              : "Try turning off filters to see all suggestions."}
+          </p>
+          {showSaved && (
+            <Button variant="glass" className="mt-4" onClick={() => setShowSaved(false)}>
+              Browse suggestions
+            </Button>
+          )}
+        </div>
+      ) : (
       <div className="grid gap-4 lg:grid-cols-2">
         {jobs.map((job) => (
           <article
@@ -1215,18 +1283,32 @@ function Suggested({ user }: { user: Candidate }) {
                 View role <ExternalLink />
               </Button>
               {user.plan === "PRO" && job.quick && (
-                <Button variant="premium" onClick={() => setSelected(job)} className="flex-1">
-                  <Zap />
-                  Quick Apply
-                </Button>
+                isApplied(job) ? (
+                  <Button variant="glass" disabled className="flex-1">
+                    <Check />
+                    Applied
+                  </Button>
+                ) : (
+                  <Button variant="premium" onClick={() => setSelected(job)} className="flex-1">
+                    <Zap />
+                    Quick Apply
+                  </Button>
+                )
               )}
-              <Button variant="ghost" size="icon" aria-label={`Bookmark ${job.title}`}>
-                <Bookmark />
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label={saved.includes(job.id) ? `Unsave ${job.title}` : `Save ${job.title}`}
+                onClick={() => toggleSave(job.id, job.title)}
+                className={cn(saved.includes(job.id) && "text-primary")}
+              >
+                <Bookmark fill={saved.includes(job.id) ? "currentColor" : "none"} />
               </Button>
             </div>
           </article>
         ))}
       </div>
+      )}
       <Dialog open={Boolean(selected)} onOpenChange={(open) => !open && setSelected(null)}>
         <DialogContent className="glass-panel rounded-3xl">
           <DialogHeader>
@@ -1367,12 +1449,12 @@ function Certifications({ user, upgrade }: { user: Candidate; upgrade: () => voi
     return (
       <PageIntro
         eyebrow="LEARNING PATHS"
-        title="Credentials that move careers."
+        title="Certifications that move careers."
         subtitle="Personalized learning matched to your next role."
       >
         <PremiumGate
           title="Unlock curated certifications"
-          copy="Explore personalized credentials across engineering, cloud, AI, and product."
+          copy="Explore personalized certifications across engineering, cloud, AI, and product."
           upgrade={upgrade}
         />
       </PageIntro>
@@ -1383,7 +1465,7 @@ function Certifications({ user, upgrade }: { user: Candidate; upgrade: () => voi
   return (
     <PageIntro
       eyebrow="LEARNING PATHS"
-      title="Credentials that move careers."
+      title="Certifications that move careers."
       subtitle="Personalized to your skills and growing interests."
       actions={
         <div className="relative">
@@ -1438,20 +1520,40 @@ function Messages({ user, upgrade }: { user: Candidate; upgrade: () => void }) {
       company: "Atlassian",
       message: "Your platform experience is a strong match…",
       time: "10:42",
+      intro:
+        "Hi {name}, your background in platform engineering really stood out. Would you have time to discuss a senior role with our team at Atlassian?",
     },
     {
       name: "Marcus Lee",
       company: "Notion",
       message: "Would you be open to a product engineering role?",
       time: "Yesterday",
+      intro:
+        "Hey {name}! We're hiring product engineers at Notion to shape AI-native workflows. Open to a quick intro chat this week?",
     },
     {
       name: "Neha Kapoor",
       company: "Razorpay",
       message: "The team enjoyed reviewing your profile.",
       time: "Mon",
+      intro:
+        "Hi {name}, our hiring team at Razorpay loved your profile. Could we schedule a 30-min conversation about a leadership opening?",
     },
   ];
+  type ChatMessage = { from: "them" | "me"; text: string };
+  const initialThreads: ChatMessage[][] = chats.map((c) => [
+    { from: "them", text: c.intro.replace("{name}", user.firstName) },
+  ]);
+  const [threads, setThreads] = useState<ChatMessage[][]>(initialThreads);
+  const [draft, setDraft] = useState("");
+  const send = () => {
+    const text = draft.trim();
+    if (!text) return;
+    setThreads((prev) =>
+      prev.map((thread, i) => (i === active ? [...thread, { from: "me", text }] : thread)),
+    );
+    setDraft("");
+  };
   if (user.plan === "FREE")
     return (
       <PageIntro
@@ -1485,7 +1587,10 @@ function Messages({ user, upgrade }: { user: Candidate; upgrade: () => void }) {
           {chats.map((chat, i) => (
             <button
               key={chat.name}
-              onClick={() => setActive(i)}
+              onClick={() => {
+                setActive(i);
+                setDraft("");
+              }}
               className={cn(
                 "flex w-full gap-3 rounded-2xl p-3 text-left",
                 active === i ? "bg-primary/10" : "hover:bg-accent",
@@ -1514,23 +1619,40 @@ function Messages({ user, upgrade }: { user: Candidate; upgrade: () => void }) {
             <p className="text-xs text-success">● Online · {chats[active].company}</p>
           </div>
           <div className="flex flex-1 flex-col justify-end gap-3 p-4 sm:p-6">
-            <div className="max-w-md rounded-2xl rounded-bl-md bg-muted p-4 text-sm">
-              Hi {user.firstName}, your background in platform engineering really stood out. Would
-              you have time to discuss a role with our team?
-            </div>
-            <div className="ml-auto max-w-md rounded-2xl rounded-br-md bg-primary p-4 text-sm text-primary-foreground">
-              Thanks for reaching out. I’d love to learn more about the team and the role.
-            </div>
-            <p className="text-center text-xs text-muted-foreground">
-              {chats[active].name} is typing…
-            </p>
+            {threads[active].map((m, idx) => (
+              <div
+                key={idx}
+                className={cn(
+                  "max-w-md rounded-2xl p-4 text-sm",
+                  m.from === "them"
+                    ? "rounded-bl-md bg-muted"
+                    : "ml-auto rounded-br-md bg-primary text-primary-foreground",
+                )}
+              >
+                {m.text}
+              </div>
+            ))}
             <div className="flex gap-2">
               <Input
                 aria-label="Message"
                 placeholder="Write a message…"
                 className="h-11 bg-background/50"
+                value={draft}
+                onChange={(e) => setDraft(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    send();
+                  }
+                }}
               />
-              <Button variant="premium" size="icon" aria-label="Send message">
+              <Button
+                variant="premium"
+                size="icon"
+                aria-label="Send message"
+                onClick={send}
+                disabled={!draft.trim()}
+              >
                 <Send />
               </Button>
             </div>
