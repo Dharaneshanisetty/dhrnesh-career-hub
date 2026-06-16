@@ -1520,20 +1520,40 @@ function Messages({ user, upgrade }: { user: Candidate; upgrade: () => void }) {
       company: "Atlassian",
       message: "Your platform experience is a strong match…",
       time: "10:42",
+      intro:
+        "Hi {name}, your background in platform engineering really stood out. Would you have time to discuss a senior role with our team at Atlassian?",
     },
     {
       name: "Marcus Lee",
       company: "Notion",
       message: "Would you be open to a product engineering role?",
       time: "Yesterday",
+      intro:
+        "Hey {name}! We're hiring product engineers at Notion to shape AI-native workflows. Open to a quick intro chat this week?",
     },
     {
       name: "Neha Kapoor",
       company: "Razorpay",
       message: "The team enjoyed reviewing your profile.",
       time: "Mon",
+      intro:
+        "Hi {name}, our hiring team at Razorpay loved your profile. Could we schedule a 30-min conversation about a leadership opening?",
     },
   ];
+  type ChatMessage = { from: "them" | "me"; text: string };
+  const initialThreads: ChatMessage[][] = chats.map((c) => [
+    { from: "them", text: c.intro.replace("{name}", user.firstName) },
+  ]);
+  const [threads, setThreads] = useState<ChatMessage[][]>(initialThreads);
+  const [draft, setDraft] = useState("");
+  const send = () => {
+    const text = draft.trim();
+    if (!text) return;
+    setThreads((prev) =>
+      prev.map((thread, i) => (i === active ? [...thread, { from: "me", text }] : thread)),
+    );
+    setDraft("");
+  };
   if (user.plan === "FREE")
     return (
       <PageIntro
@@ -1567,7 +1587,10 @@ function Messages({ user, upgrade }: { user: Candidate; upgrade: () => void }) {
           {chats.map((chat, i) => (
             <button
               key={chat.name}
-              onClick={() => setActive(i)}
+              onClick={() => {
+                setActive(i);
+                setDraft("");
+              }}
               className={cn(
                 "flex w-full gap-3 rounded-2xl p-3 text-left",
                 active === i ? "bg-primary/10" : "hover:bg-accent",
@@ -1596,23 +1619,40 @@ function Messages({ user, upgrade }: { user: Candidate; upgrade: () => void }) {
             <p className="text-xs text-success">● Online · {chats[active].company}</p>
           </div>
           <div className="flex flex-1 flex-col justify-end gap-3 p-4 sm:p-6">
-            <div className="max-w-md rounded-2xl rounded-bl-md bg-muted p-4 text-sm">
-              Hi {user.firstName}, your background in platform engineering really stood out. Would
-              you have time to discuss a role with our team?
-            </div>
-            <div className="ml-auto max-w-md rounded-2xl rounded-br-md bg-primary p-4 text-sm text-primary-foreground">
-              Thanks for reaching out. I’d love to learn more about the team and the role.
-            </div>
-            <p className="text-center text-xs text-muted-foreground">
-              {chats[active].name} is typing…
-            </p>
+            {threads[active].map((m, idx) => (
+              <div
+                key={idx}
+                className={cn(
+                  "max-w-md rounded-2xl p-4 text-sm",
+                  m.from === "them"
+                    ? "rounded-bl-md bg-muted"
+                    : "ml-auto rounded-br-md bg-primary text-primary-foreground",
+                )}
+              >
+                {m.text}
+              </div>
+            ))}
             <div className="flex gap-2">
               <Input
                 aria-label="Message"
                 placeholder="Write a message…"
                 className="h-11 bg-background/50"
+                value={draft}
+                onChange={(e) => setDraft(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    send();
+                  }
+                }}
               />
-              <Button variant="premium" size="icon" aria-label="Send message">
+              <Button
+                variant="premium"
+                size="icon"
+                aria-label="Send message"
+                onClick={send}
+                disabled={!draft.trim()}
+              >
                 <Send />
               </Button>
             </div>
