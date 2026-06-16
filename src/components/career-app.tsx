@@ -1591,8 +1591,8 @@ function Messages({ user, upgrade }: { user: Candidate; upgrade: () => void }) {
       title="Conversations that matter."
       subtitle="Curated recruiter outreach, all in one calm inbox."
     >
-      <div className="glass-panel grid min-h-[560px] overflow-hidden rounded-3xl md:grid-cols-[320px_1fr]">
-        <div className="border-b border-border p-3 md:border-b-0 md:border-r">
+      <div className="glass-panel grid h-[600px] overflow-hidden rounded-3xl md:h-[640px] md:grid-cols-[320px_1fr]">
+        <div className="overflow-y-auto border-b border-border p-3 md:border-b-0 md:border-r">
           <div className="relative mb-3">
             <Search className="absolute left-3 top-3 size-4 text-muted-foreground" />
             <Input
@@ -1632,17 +1632,17 @@ function Messages({ user, upgrade }: { user: Candidate; upgrade: () => void }) {
             </button>
           ))}
         </div>
-        <div className="flex flex-col">
+        <div className="flex min-h-0 flex-col">
           <div className="border-b border-border p-4">
             <b>{chats[active].name}</b>
             <p className="text-xs text-success">● Online · {chats[active].company}</p>
           </div>
-          <div className="flex flex-1 flex-col justify-end gap-3 p-4 sm:p-6">
+          <div className="flex flex-1 flex-col justify-end gap-3 overflow-y-auto p-4 sm:p-6">
             {threads[active].map((m, idx) => (
               <div
                 key={idx}
                 className={cn(
-                  "max-w-md rounded-2xl p-4 text-sm",
+                  "max-w-[85%] rounded-2xl p-4 text-sm sm:max-w-md",
                   m.from === "them"
                     ? "rounded-bl-md bg-muted"
                     : "ml-auto rounded-br-md bg-primary text-primary-foreground",
@@ -1651,30 +1651,31 @@ function Messages({ user, upgrade }: { user: Candidate; upgrade: () => void }) {
                 {m.text}
               </div>
             ))}
-            <div className="flex gap-2">
-              <Input
-                aria-label="Message"
-                placeholder="Write a message…"
-                className="h-11 bg-background/50"
-                value={draft}
-                onChange={(e) => setDraft(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) {
-                    e.preventDefault();
-                    send();
-                  }
-                }}
-              />
-              <Button
-                variant="premium"
-                size="icon"
-                aria-label="Send message"
-                onClick={send}
-                disabled={!draft.trim()}
-              >
-                <Send />
-              </Button>
-            </div>
+          </div>
+          <div className="flex shrink-0 gap-2 border-t border-border p-3 sm:p-4">
+            <Input
+              aria-label="Message"
+              placeholder="Write a message…"
+              className="h-11 min-w-0 flex-1 bg-background/50"
+              value={draft}
+              onChange={(e) => setDraft(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  send();
+                }
+              }}
+            />
+            <Button
+              variant="premium"
+              size="icon"
+              aria-label="Send message"
+              onClick={send}
+              disabled={!draft.trim()}
+              className="shrink-0"
+            >
+              <Send />
+            </Button>
           </div>
         </div>
       </div>
