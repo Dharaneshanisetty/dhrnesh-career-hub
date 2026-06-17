@@ -2339,15 +2339,16 @@ function PageIntro({
   actions?: ReactNode;
   children: ReactNode;
 }) {
+  const { t } = useT();
   return (
     <>
       <header className="mb-7 flex flex-col gap-4 sm:grid sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
         <div className="min-w-0">
-          <p className="text-xs font-bold tracking-[.16em] text-primary">{eyebrow}</p>
+          <p className="text-xs font-bold tracking-[.16em] text-primary">{t(eyebrow)}</p>
           <h1 className="mt-2 font-display text-3xl font-bold tracking-[-0.04em] sm:text-4xl">
-            {title}
+            {t(title)}
           </h1>
-          <p className="mt-2 max-w-2xl text-sm text-muted-foreground">{subtitle}</p>
+          <p className="mt-2 max-w-2xl text-sm text-muted-foreground">{t(subtitle)}</p>
         </div>
         {actions && <div className="min-w-0 sm:shrink-0">{actions}</div>}
       </header>
