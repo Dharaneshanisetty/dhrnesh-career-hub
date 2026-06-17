@@ -1,4 +1,4 @@
-import { useState, type FormEvent, type ReactNode } from "react";
+import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import {
   Area,
@@ -18,7 +18,14 @@ import {
   BriefcaseBusiness,
   CalendarDays,
   Check,
+  CheckCheck,
   ChevronRight,
+  ArrowLeft,
+  Paperclip,
+  Smile,
+  Phone,
+  Video,
+  MoreVertical,
   CircleUserRound,
   Crown,
   ExternalLink,
