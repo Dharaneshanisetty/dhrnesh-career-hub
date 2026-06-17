@@ -830,6 +830,7 @@ function Dashboard({
   apps: Application[];
   navigate: (page: Page) => void;
 }) {
+  const { t } = useT();
   const hour = new Date().getHours();
   const greeting =
     hour < 12
@@ -876,12 +877,12 @@ function Dashboard({
     <>
       <section className="mb-7 grid gap-5 xl:grid-cols-[1fr_auto]">
         <div>
-          <p className="text-sm font-semibold text-primary">{greeting[0].toUpperCase()}</p>
+          <p className="text-sm font-semibold text-primary">{t(greeting[0]).toUpperCase()}</p>
           <h1 className="mt-1 font-display text-3xl font-bold tracking-[-0.04em] sm:text-5xl">
-            {greeting[0]}, {user.firstName} {greeting[1]}
+            {t(greeting[0])}, {user.firstName} {greeting[1]}
           </h1>
           <p className="mt-3 text-muted-foreground">
-            Every focused step brings your next opportunity closer.
+            {t("Every focused step brings your next opportunity closer.")}
           </p>
         </div>
         <div className="glass-panel flex items-center gap-4 rounded-2xl p-4">
