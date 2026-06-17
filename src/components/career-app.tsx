@@ -76,6 +76,8 @@ import {
   type Candidate,
 } from "@/lib/career-store";
 import { useCareer } from "@/context/career-context";
+import { useT, LANGUAGES, type Lang } from "@/lib/i18n";
+import { Globe } from "lucide-react";
 
 type Page =
   | "dashboard"
