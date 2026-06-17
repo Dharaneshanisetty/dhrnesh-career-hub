@@ -1564,20 +1564,107 @@ function Messages({ user, upgrade }: { user: Candidate; upgrade: () => void }) {
         "Hi {name}, our hiring team at Razorpay loved your profile. Could we schedule a 30-min conversation about a leadership opening?",
     },
   ];
-  type ChatMessage = { from: "them" | "me"; text: string };
-  const initialThreads: ChatMessage[][] = chats.map((c) => [
-    { from: "them", text: c.intro.replace("{name}", user.firstName) },
+  type Status = "sent" | "delivered" | "read";
+  type ChatMessage = { from: "them" | "me"; text: string; at: number; status?: Status };
+  const now = Date.now();
+  const initialThreads: ChatMessage[][] = chats.map((c, i) => [
+    {
+      from: "them",
+      text: c.intro.replace("{name}", user.firstName),
+      at: now - (i + 1) * 1000 * 60 * 45,
+    },
   ]);
   const [threads, setThreads] = useState<ChatMessage[][]>(initialThreads);
   const [draft, setDraft] = useState("");
+  const [query, setQuery] = useState("");
+  const [unread, setUnread] = useState<number[]>([1, 2]);
+  const [typing, setTyping] = useState<Record<number, boolean>>({});
+  const [showChatMobile, setShowChatMobile] = useState(false);
+  const scrollerRef = useRef<HTMLDivElement | null>(null);
+
+  const filtered = chats
+    .map((c, i) => ({ c, i }))
+    .filter(({ c }) =>
+      query.trim()
+        ? (c.name + " " + c.company).toLowerCase().includes(query.toLowerCase())
+        : true,
+    );
+
+  const fmtTime = (ts: number) =>
+    new Date(ts).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  const fmtListTime = (ts: number) => {
+    const d = new Date(ts);
+    const diff = (Date.now() - ts) / 86400000;
+    if (diff < 1) return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    if (diff < 2) return "Yesterday";
+    if (diff < 7) return d.toLocaleDateString([], { weekday: "short" });
+    return d.toLocaleDateString();
+  };
+
+  useEffect(() => {
+    if (scrollerRef.current) scrollerRef.current.scrollTop = scrollerRef.current.scrollHeight;
+  }, [active, threads, typing]);
+
+  useEffect(() => {
+    setUnread((u) => u.filter((idx) => idx !== active));
+    setThreads((prev) =>
+      prev.map((thread, i) =>
+        i === active
+          ? thread.map((m) => (m.from === "me" ? { ...m, status: "read" as Status } : m))
+          : thread,
+      ),
+    );
+  }, [active]);
+
   const send = () => {
     const text = draft.trim();
     if (!text) return;
-    setThreads((prev) =>
-      prev.map((thread, i) => (i === active ? [...thread, { from: "me", text }] : thread)),
-    );
+    const target = active;
+    const myMsg: ChatMessage = { from: "me", text, at: Date.now(), status: "sent" };
+    setThreads((prev) => prev.map((thread, i) => (i === target ? [...thread, myMsg] : thread)));
     setDraft("");
+    setTimeout(() => {
+      setThreads((prev) =>
+        prev.map((thread, i) =>
+          i === target
+            ? thread.map((m) => (m === myMsg ? { ...m, status: "delivered" } : m))
+            : thread,
+        ),
+      );
+    }, 600);
+    setTimeout(() => setTyping((t) => ({ ...t, [target]: true })), 1100);
+    setTimeout(() => {
+      setThreads((prev) =>
+        prev.map((thread, i) =>
+          i === target
+            ? thread.map((m) => (m === myMsg ? { ...m, status: "read" } : m))
+            : thread,
+        ),
+      );
+    }, 1400);
+    setTimeout(() => {
+      const replies = [
+        "Got it — thanks for the quick reply!",
+        "That sounds great. Let me share a few time slots.",
+        "Appreciate it. I'll loop in the hiring manager.",
+        "Perfect, I'll send over the role brief shortly.",
+      ];
+      const reply: ChatMessage = {
+        from: "them",
+        text: replies[Math.floor(Math.random() * replies.length)],
+        at: Date.now(),
+      };
+      setTyping((t) => ({ ...t, [target]: false }));
+      setThreads((prev) => prev.map((thread, i) => (i === target ? [...thread, reply] : thread)));
+    }, 2400);
   };
+
+  const activeChat = chats[active];
+  const activeInitials = activeChat.name
+    .split(" ")
+    .map((n) => n[0])
+    .join("");
+
   if (user.plan === "FREE")
     return (
       <PageIntro
@@ -1599,71 +1686,200 @@ function Messages({ user, upgrade }: { user: Candidate; upgrade: () => void }) {
       subtitle="Curated recruiter outreach, all in one calm inbox."
     >
       <div className="glass-panel grid h-[600px] overflow-hidden rounded-3xl md:h-[640px] md:grid-cols-[320px_1fr]">
-        <div className="overflow-y-auto border-b border-border p-3 md:border-b-0 md:border-r">
+        <div
+          className={cn(
+            "flex-col overflow-y-auto border-b border-border p-3 md:flex md:border-b-0 md:border-r",
+            showChatMobile ? "hidden" : "flex",
+          )}
+        >
           <div className="relative mb-3">
             <Search className="absolute left-3 top-3 size-4 text-muted-foreground" />
             <Input
               aria-label="Search recruiters"
               placeholder="Search recruiters"
               className="h-10 bg-background/50 pl-9"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
             />
           </div>
-          {chats.map((chat, i) => (
+          {filtered.length === 0 && (
+            <p className="px-3 py-6 text-center text-xs text-muted-foreground">
+              No recruiters match "{query}"
+            </p>
+          )}
+          {filtered.map(({ c: chat, i }) => (
             <button
               key={chat.name}
               onClick={() => {
                 setActive(i);
                 setDraft("");
+                setShowChatMobile(true);
               }}
               className={cn(
                 "flex w-full gap-3 rounded-2xl p-3 text-left",
                 active === i ? "bg-primary/10" : "hover:bg-accent",
               )}
             >
-              <div className="grid size-10 shrink-0 place-items-center rounded-full bg-primary/15 font-bold text-primary">
-                {chat.name
-                  .split(" ")
-                  .map((n) => n[0])
-                  .join("")}
+              <div className="relative shrink-0">
+                <div className="grid size-10 place-items-center rounded-full bg-primary/15 font-bold text-primary">
+                  {chat.name
+                    .split(" ")
+                    .map((n) => n[0])
+                    .join("")}
+                </div>
+                <span className="absolute bottom-0 right-0 size-2.5 rounded-full border-2 border-background bg-success" />
               </div>
-              <div className="min-w-0">
+              <div className="min-w-0 flex-1">
                 <div className="flex items-center">
                   <p className="truncate text-sm font-semibold">{chat.name}</p>
-                  <span className="ml-auto text-[10px] text-muted-foreground">{chat.time}</span>
+                  <span
+                    className={cn(
+                      "ml-auto text-[10px]",
+                      unread.includes(i) ? "font-semibold text-primary" : "text-muted-foreground",
+                    )}
+                  >
+                    {threads[i].length > 0
+                      ? fmtListTime(threads[i][threads[i].length - 1].at)
+                      : chat.time}
+                  </span>
                 </div>
                 <p className="text-xs text-muted-foreground">{chat.company}</p>
-                <p className="mt-1 truncate text-xs text-muted-foreground">
-                  {threads[i].length > 0 ? threads[i][threads[i].length - 1].text : chat.message}
-                </p>
+                <div className="mt-1 flex items-center gap-2">
+                  <p
+                    className={cn(
+                      "min-w-0 flex-1 truncate text-xs",
+                      unread.includes(i)
+                        ? "font-semibold text-foreground"
+                        : "text-muted-foreground",
+                    )}
+                  >
+                    {typing[i]
+                      ? "typing…"
+                      : threads[i].length > 0
+                        ? (threads[i][threads[i].length - 1].from === "me" ? "You: " : "") +
+                          threads[i][threads[i].length - 1].text
+                        : chat.message}
+                  </p>
+                  {unread.includes(i) && (
+                    <span className="grid size-5 shrink-0 place-items-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
+                      {threads[i].filter((m) => m.from === "them").length}
+                    </span>
+                  )}
+                </div>
               </div>
             </button>
           ))}
         </div>
-        <div className="flex min-h-0 flex-col">
-          <div className="border-b border-border p-4">
-            <b>{chats[active].name}</b>
-            <p className="text-xs text-success">● Online · {chats[active].company}</p>
+        <div className={cn("min-h-0 flex-col md:flex", showChatMobile ? "flex" : "hidden")}>
+          <div className="flex items-center gap-3 border-b border-border p-3 sm:p-4">
+            <button
+              type="button"
+              aria-label="Back to chats"
+              onClick={() => setShowChatMobile(false)}
+              className="grid size-9 place-items-center rounded-full hover:bg-accent md:hidden"
+            >
+              <ArrowLeft className="size-4" />
+            </button>
+            <div className="relative shrink-0">
+              <div className="grid size-10 place-items-center rounded-full bg-primary/15 font-bold text-primary">
+                {activeInitials}
+              </div>
+              <span className="absolute bottom-0 right-0 size-2.5 rounded-full border-2 border-background bg-success" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <b className="block truncate">{activeChat.name}</b>
+              <p className="truncate text-xs text-muted-foreground">
+                {typing[active] ? (
+                  <span className="text-success">typing…</span>
+                ) : (
+                  <>online · {activeChat.company}</>
+                )}
+              </p>
+            </div>
+            <div className="hidden items-center gap-1 sm:flex">
+              <button
+                type="button"
+                aria-label="Voice call"
+                className="grid size-9 place-items-center rounded-full text-muted-foreground hover:bg-accent hover:text-foreground"
+              >
+                <Phone className="size-4" />
+              </button>
+              <button
+                type="button"
+                aria-label="Video call"
+                className="grid size-9 place-items-center rounded-full text-muted-foreground hover:bg-accent hover:text-foreground"
+              >
+                <Video className="size-4" />
+              </button>
+              <button
+                type="button"
+                aria-label="More"
+                className="grid size-9 place-items-center rounded-full text-muted-foreground hover:bg-accent hover:text-foreground"
+              >
+                <MoreVertical className="size-4" />
+              </button>
+            </div>
           </div>
-          <div className="flex flex-1 flex-col justify-end gap-3 overflow-y-auto p-4 sm:p-6">
+          <div ref={scrollerRef} className="flex flex-1 flex-col gap-2 overflow-y-auto p-4 sm:p-6">
+            <div className="mx-auto mb-2 rounded-full bg-muted/60 px-3 py-1 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+              Today
+            </div>
             {threads[active].map((m, idx) => (
               <div
                 key={idx}
                 className={cn(
-                  "max-w-[85%] rounded-2xl p-4 text-sm sm:max-w-md",
+                  "flex max-w-[85%] flex-col gap-1 rounded-2xl px-4 py-2.5 text-sm sm:max-w-md",
                   m.from === "them"
                     ? "rounded-bl-md bg-muted"
                     : "ml-auto rounded-br-md bg-primary text-primary-foreground",
                 )}
               >
-                {m.text}
+                <p className="whitespace-pre-wrap break-words">{m.text}</p>
+                <div
+                  className={cn(
+                    "flex items-center gap-1 self-end text-[10px]",
+                    m.from === "them" ? "text-muted-foreground" : "text-primary-foreground/75",
+                  )}
+                >
+                  <span>{fmtTime(m.at)}</span>
+                  {m.from === "me" &&
+                    (m.status === "read" ? (
+                      <CheckCheck className="size-3 text-sky-300" />
+                    ) : m.status === "delivered" ? (
+                      <CheckCheck className="size-3" />
+                    ) : (
+                      <Check className="size-3" />
+                    ))}
+                </div>
               </div>
             ))}
+            {typing[active] && (
+              <div className="flex max-w-[85%] items-center gap-1 rounded-2xl rounded-bl-md bg-muted px-4 py-3">
+                <span className="size-1.5 animate-bounce rounded-full bg-muted-foreground [animation-delay:-0.3s]" />
+                <span className="size-1.5 animate-bounce rounded-full bg-muted-foreground [animation-delay:-0.15s]" />
+                <span className="size-1.5 animate-bounce rounded-full bg-muted-foreground" />
+              </div>
+            )}
           </div>
-          <div className="flex shrink-0 gap-2 border-t border-border p-3 sm:p-4">
+          <div className="flex shrink-0 items-center gap-2 border-t border-border p-3 sm:p-4">
+            <button
+              type="button"
+              aria-label="Add emoji"
+              className="grid size-10 shrink-0 place-items-center rounded-full text-muted-foreground hover:bg-accent hover:text-foreground"
+            >
+              <Smile className="size-5" />
+            </button>
+            <button
+              type="button"
+              aria-label="Attach file"
+              className="grid size-10 shrink-0 place-items-center rounded-full text-muted-foreground hover:bg-accent hover:text-foreground"
+            >
+              <Paperclip className="size-5" />
+            </button>
             <Input
               aria-label="Message"
-              placeholder="Write a message…"
-              className="h-11 min-w-0 flex-1 bg-background/50"
+              placeholder="Type a message"
+              className="h-11 min-w-0 flex-1 rounded-full bg-background/50"
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
               onKeyDown={(e) => {
@@ -1679,7 +1895,7 @@ function Messages({ user, upgrade }: { user: Candidate; upgrade: () => void }) {
               aria-label="Send message"
               onClick={send}
               disabled={!draft.trim()}
-              className="shrink-0"
+              className="shrink-0 rounded-full"
             >
               <Send />
             </Button>
