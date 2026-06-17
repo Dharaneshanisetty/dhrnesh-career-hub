@@ -681,7 +681,7 @@ function Workspace() {
               <p className="truncate text-sm font-semibold">
                 {user.firstName} {user.lastName}
               </p>
-              <p className="text-[11px] text-muted-foreground">{user.plan} plan</p>
+              <p className="text-[11px] text-muted-foreground">{user.plan} {t("plan")}</p>
             </div>
             <ChevronRight className="ml-auto size-4" />
           </button>
