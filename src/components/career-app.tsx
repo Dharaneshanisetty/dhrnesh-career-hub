@@ -602,6 +602,7 @@ function DemoCredentials({ setEmail }: { setEmail: (email: string, password: str
 
 function Workspace() {
   const { user, applications, theme, toggleTheme } = useCareer();
+  const { t, lang, setLang } = useT();
   const [page, setPage] = useState<Page>("dashboard");
   const [mobileOpen, setMobileOpen] = useState(false);
   const [notifications, setNotifications] = useState(false);
