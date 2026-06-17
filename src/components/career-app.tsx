@@ -652,7 +652,7 @@ function Workspace() {
               )}
             >
               <item.icon className="size-4" />
-              {tNav(item.label)}
+              {t(item.label)}
               {item.page === "messages" && user.plan === "PRO" && (
                 <span className="ml-auto rounded-full bg-primary-foreground/20 px-2 py-0.5 text-[10px]">
                   3
