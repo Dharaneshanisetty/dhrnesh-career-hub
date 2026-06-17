@@ -76,6 +76,8 @@ import {
   type Candidate,
 } from "@/lib/career-store";
 import { useCareer } from "@/context/career-context";
+import { useT, LANGUAGES, type Lang } from "@/lib/i18n";
+import { Globe } from "lucide-react";
 
 type Page =
   | "dashboard"
@@ -600,6 +602,7 @@ function DemoCredentials({ setEmail }: { setEmail: (email: string, password: str
 
 function Workspace() {
   const { user, applications, theme, toggleTheme } = useCareer();
+  const { t, lang, setLang } = useT();
   const [page, setPage] = useState<Page>("dashboard");
   const [mobileOpen, setMobileOpen] = useState(false);
   const [notifications, setNotifications] = useState(false);
@@ -649,7 +652,7 @@ function Workspace() {
               )}
             >
               <item.icon className="size-4" />
-              {item.label}
+              {t(item.label)}
               {item.page === "messages" && user.plan === "PRO" && (
                 <span className="ml-auto rounded-full bg-primary-foreground/20 px-2 py-0.5 text-[10px]">
                   3
@@ -664,7 +667,7 @@ function Workspace() {
             className="flex h-11 w-full items-center gap-3 rounded-xl px-3 text-sm text-muted-foreground hover:bg-accent"
           >
             <Settings className="size-4" />
-            Settings
+            {t("Settings")}
           </button>
           <button
             onClick={() => navigate("profile")}
@@ -678,7 +681,7 @@ function Workspace() {
               <p className="truncate text-sm font-semibold">
                 {user.firstName} {user.lastName}
               </p>
-              <p className="text-[11px] text-muted-foreground">{user.plan} plan</p>
+              <p className="text-[11px] text-muted-foreground">{user.plan} {t("plan")}</p>
             </div>
             <ChevronRight className="ml-auto size-4" />
           </button>
@@ -703,19 +706,35 @@ function Workspace() {
             <Menu />
           </Button>
           <div className="min-w-0">
-            <p className="truncate text-sm font-bold sm:text-base">{pageTitles[page]}</p>
+            <p className="truncate text-sm font-bold sm:text-base">{t(pageTitles[page])}</p>
             <p className="hidden text-xs text-muted-foreground sm:block">
-              Your intelligent career workspace
+              {t("Your intelligent career workspace")}
             </p>
           </div>
           <div className="flex shrink-0 items-center gap-1 sm:gap-2">
+            <Select value={lang} onValueChange={(v) => setLang(v as Lang)}>
+              <SelectTrigger
+                aria-label={t("Language")}
+                className="hidden h-9 w-auto gap-2 rounded-full border-border/60 bg-background/60 px-3 text-xs font-medium sm:flex"
+              >
+                <Globe className="size-4 opacity-70" />
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent align="end">
+                {LANGUAGES.map((l) => (
+                  <SelectItem key={l.code} value={l.code}>
+                    {l.native}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             <Button
               variant="glass"
               className="hidden sm:flex"
               onClick={() => navigate("integrations")}
             >
               <Plug />
-              Connect apps
+              {t("Connect apps")}
             </Button>
             <Button
               variant={user.plan === "PRO" ? "premium" : "glass"}
@@ -723,12 +742,12 @@ function Workspace() {
               className="px-3"
             >
               <Crown />
-              <span className="hidden sm:inline">{user.plan === "PRO" ? "PRO" : "Upgrade"}</span>
+              <span className="hidden sm:inline">{user.plan === "PRO" ? "PRO" : t("Upgrade")}</span>
             </Button>
             <Button
               variant="ghost"
               size="icon"
-              aria-label="Notifications"
+              aria-label={t("Notifications")}
               onClick={() => setNotifications(!notifications)}
               className="relative"
             >
@@ -742,8 +761,8 @@ function Workspace() {
           {notifications && (
             <div className="glass-panel absolute right-4 top-16 w-[min(24rem,calc(100vw-2rem))] rounded-2xl p-3 shadow-glass">
               <div className="flex items-center justify-between px-2 py-2">
-                <b>Notifications</b>
-                <span className="text-xs text-primary">3 new</span>
+                <b>{t("Notifications")}</b>
+                <span className="text-xs text-primary">{t("3 new")}</span>
               </div>
               {[
                 "Your application at Arc is under review",
@@ -811,6 +830,7 @@ function Dashboard({
   apps: Application[];
   navigate: (page: Page) => void;
 }) {
+  const { t } = useT();
   const hour = new Date().getHours();
   const greeting =
     hour < 12
@@ -857,12 +877,12 @@ function Dashboard({
     <>
       <section className="mb-7 grid gap-5 xl:grid-cols-[1fr_auto]">
         <div>
-          <p className="text-sm font-semibold text-primary">{greeting[0].toUpperCase()}</p>
+          <p className="text-sm font-semibold text-primary">{t(greeting[0]).toUpperCase()}</p>
           <h1 className="mt-1 font-display text-3xl font-bold tracking-[-0.04em] sm:text-5xl">
-            {greeting[0]}, {user.firstName} {greeting[1]}
+            {t(greeting[0])}, {user.firstName} {greeting[1]}
           </h1>
           <p className="mt-3 text-muted-foreground">
-            Every focused step brings your next opportunity closer.
+            {t("Every focused step brings your next opportunity closer.")}
           </p>
         </div>
         <div className="glass-panel flex items-center gap-4 rounded-2xl p-4">
@@ -2337,15 +2357,16 @@ function PageIntro({
   actions?: ReactNode;
   children: ReactNode;
 }) {
+  const { t } = useT();
   return (
     <>
       <header className="mb-7 flex flex-col gap-4 sm:grid sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
         <div className="min-w-0">
-          <p className="text-xs font-bold tracking-[.16em] text-primary">{eyebrow}</p>
+          <p className="text-xs font-bold tracking-[.16em] text-primary">{t(eyebrow)}</p>
           <h1 className="mt-2 font-display text-3xl font-bold tracking-[-0.04em] sm:text-4xl">
-            {title}
+            {t(title)}
           </h1>
-          <p className="mt-2 max-w-2xl text-sm text-muted-foreground">{subtitle}</p>
+          <p className="mt-2 max-w-2xl text-sm text-muted-foreground">{t(subtitle)}</p>
         </div>
         {actions && <div className="min-w-0 sm:shrink-0">{actions}</div>}
       </header>
