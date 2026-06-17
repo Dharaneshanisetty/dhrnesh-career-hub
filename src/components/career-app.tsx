@@ -667,7 +667,7 @@ function Workspace() {
             className="flex h-11 w-full items-center gap-3 rounded-xl px-3 text-sm text-muted-foreground hover:bg-accent"
           >
             <Settings className="size-4" />
-            Settings
+            {t("Settings")}
           </button>
           <button
             onClick={() => navigate("profile")}
