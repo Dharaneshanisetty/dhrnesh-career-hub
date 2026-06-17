@@ -706,19 +706,35 @@ function Workspace() {
             <Menu />
           </Button>
           <div className="min-w-0">
-            <p className="truncate text-sm font-bold sm:text-base">{pageTitles[page]}</p>
+            <p className="truncate text-sm font-bold sm:text-base">{t(pageTitles[page])}</p>
             <p className="hidden text-xs text-muted-foreground sm:block">
-              Your intelligent career workspace
+              {t("Your intelligent career workspace")}
             </p>
           </div>
           <div className="flex shrink-0 items-center gap-1 sm:gap-2">
+            <Select value={lang} onValueChange={(v) => setLang(v as Lang)}>
+              <SelectTrigger
+                aria-label={t("Language")}
+                className="hidden h-9 w-auto gap-2 rounded-full border-border/60 bg-background/60 px-3 text-xs font-medium sm:flex"
+              >
+                <Globe className="size-4 opacity-70" />
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent align="end">
+                {LANGUAGES.map((l) => (
+                  <SelectItem key={l.code} value={l.code}>
+                    {l.native}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             <Button
               variant="glass"
               className="hidden sm:flex"
               onClick={() => navigate("integrations")}
             >
               <Plug />
-              Connect apps
+              {t("Connect apps")}
             </Button>
             <Button
               variant={user.plan === "PRO" ? "premium" : "glass"}
@@ -726,12 +742,12 @@ function Workspace() {
               className="px-3"
             >
               <Crown />
-              <span className="hidden sm:inline">{user.plan === "PRO" ? "PRO" : "Upgrade"}</span>
+              <span className="hidden sm:inline">{user.plan === "PRO" ? "PRO" : t("Upgrade")}</span>
             </Button>
             <Button
               variant="ghost"
               size="icon"
-              aria-label="Notifications"
+              aria-label={t("Notifications")}
               onClick={() => setNotifications(!notifications)}
               className="relative"
             >
@@ -745,8 +761,8 @@ function Workspace() {
           {notifications && (
             <div className="glass-panel absolute right-4 top-16 w-[min(24rem,calc(100vw-2rem))] rounded-2xl p-3 shadow-glass">
               <div className="flex items-center justify-between px-2 py-2">
-                <b>Notifications</b>
-                <span className="text-xs text-primary">3 new</span>
+                <b>{t("Notifications")}</b>
+                <span className="text-xs text-primary">{t("3 new")}</span>
               </div>
               {[
                 "Your application at Arc is under review",
