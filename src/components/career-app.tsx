@@ -161,6 +161,7 @@ export function CareerApp() {
 
 function AuthExperience() {
   const { login, register, toggleTheme, theme } = useCareer();
+  const { t } = useT();
   const [mode, setMode] = useState<"welcome" | "login" | "register" | "otp">("welcome");
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -185,15 +186,15 @@ function AuthExperience() {
       setLoading(false);
       if (!form.password) {
         setMode("otp");
-        toast("OTP sent", { description: "Use 123456 for this demo." });
+        toast(t("OTP sent"), { description: t("Use 123456 for this demo.") });
         return;
       }
-      if (!login(form.email, form.password)) toast.error("Email or password is incorrect");
+      if (!login(form.email, form.password)) toast.error(t("Email or password is incorrect"));
     }, 650);
   };
   const verifyOtp = () => {
     if (form.otp !== "123456" || !login(form.email, "123456"))
-      toast.error("Enter the demo OTP 123456");
+      toast.error(t("Enter the demo OTP 123456"));
   };
   const parseResume = () => {
     setLoading(true);
@@ -206,12 +207,12 @@ function AuthExperience() {
         phone: "+91 98765 12345",
       }));
       setLoading(false);
-      toast.success("Information extracted successfully");
+      toast.success(t("Information extracted successfully"));
     }, 900);
   };
   const finishRegistration = () => {
     if (passwordScore < 5 || form.password !== form.confirm) {
-      toast.error("Please meet all password requirements");
+      toast.error(t("Please meet all password requirements"));
       return;
     }
     const candidate: Candidate = {
@@ -222,7 +223,7 @@ function AuthExperience() {
       phone: form.phone,
       password: form.password,
       plan: "FREE",
-      headline: "Open to new opportunities",
+      headline: t("Open to new opportunities"),
       location: "India",
       skills: [],
       completion: 35,
@@ -257,23 +258,22 @@ function AuthExperience() {
             </div>
             <div>
               <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-glass-border bg-glass px-3 py-1.5 text-xs font-semibold text-primary">
-                <Sparkles className="size-3.5" /> Intelligence for your career
+                <Sparkles className="size-3.5" /> {t("Intelligence for your career")}
               </div>
               <h1 className="max-w-xl font-display text-6xl font-bold leading-[1.02] tracking-[-0.055em]">
-                Every opportunity.
+                {t("Every opportunity.")}
                 <br />
-                <span className="text-primary">One beautiful view.</span>
+                <span className="text-primary">{t("One beautiful view.")}</span>
               </h1>
               <p className="mt-6 max-w-md text-lg leading-relaxed text-muted-foreground">
-                Track applications, discover stronger matches, and move through your career with
-                clarity.
+                {t("Track applications, discover stronger matches, and move through your career with clarity.")}
               </p>
             </div>
             <div className="grid grid-cols-3 gap-3">
               {[
-                ["70+", "ATS partners"],
-                ["94%", "match accuracy"],
-                ["2.4×", "faster search"],
+                ["70+", t("ATS partners")],
+                ["94%", t("match accuracy")],
+                ["2.4×", t("faster search")],
               ].map(([metric, label]) => (
                 <div key={label} className="glass-panel rounded-2xl p-4">
                   <p className="text-xl font-bold">{metric}</p>
@@ -295,28 +295,28 @@ function AuthExperience() {
                     <BrandMark />
                     <span className="text-xl font-bold">CareerHub</span>
                   </div>
-                  <p className="mb-3 text-sm font-semibold text-primary">YOUR CAREER, ORGANIZED</p>
+                  <p className="mb-3 text-sm font-semibold text-primary">{t("YOUR CAREER, ORGANIZED")}</p>
                   <h2 className="font-display text-4xl font-bold tracking-[-0.04em] sm:text-5xl">
-                    Track every application.
+                    {t("Track every application.")}
                     <br />
-                    Land what’s next.
+                    {t("Land what’s next.")}
                   </h2>
                   <p className="mt-5 max-w-md text-muted-foreground">
-                    A private, intelligent workspace for your entire job search.
+                    {t("A private, intelligent workspace for your entire job search.")}
                   </p>
                   <div className="mt-10 grid gap-3">
                     <Button variant="premium" onClick={() => setMode("register")} className="h-13">
-                      Create account <ChevronRight />
+                      {t("Create account")} <ChevronRight />
                     </Button>
                     <Button variant="glass" onClick={() => setMode("login")} className="h-13">
-                      Sign in
+                      {t("Sign in")}
                     </Button>
                   </div>
                   <button
                     onClick={() => setMode("login")}
                     className="mt-8 w-full text-center text-xs text-muted-foreground underline-offset-4 hover:underline"
                   >
-                    Explore with demo accounts
+                    {t("Explore with demo accounts")}
                   </button>
                 </motion.div>
               )}
@@ -328,40 +328,40 @@ function AuthExperience() {
                   animate={{ opacity: 1, x: 0 }}
                 >
                   <AuthBack onClick={() => setMode("welcome")} />
-                  <p className="text-sm font-semibold text-primary">WELCOME BACK</p>
-                  <h2 className="mt-2 text-4xl font-bold tracking-tight">Sign in to CareerHub</h2>
+                  <p className="text-sm font-semibold text-primary">{t("WELCOME BACK")}</p>
+                  <h2 className="mt-2 text-4xl font-bold tracking-tight">{t("Sign in to CareerHub")}</h2>
                   <p className="mt-2 text-sm text-muted-foreground">
-                    Continue your journey from exactly where you left off.
+                    {t("Continue your journey from exactly where you left off.")}
                   </p>
                   <div className="mt-8 space-y-4">
                     <Field
-                      label="Email address"
+                      label={t("Email address")}
                       type="email"
                       value={form.email}
                       onChange={(v) => update("email", v)}
                       placeholder="you@example.com"
                     />
                     <Field
-                      label="Password"
+                      label={t("Password")}
                       type="password"
                       value={form.password}
                       onChange={(v) => update("password", v)}
-                      placeholder="Leave blank for OTP"
+                      placeholder={t("Leave blank for OTP")}
                     />
                     <Button type="submit" variant="premium" className="w-full">
-                      {loading ? "Signing in…" : "Sign in"}
+                      {loading ? t("Signing in…") : t("Sign in")}
                     </Button>
                     <Button
                       type="button"
                       variant="glass"
                       className="w-full"
                       onClick={() => {
-                        if (!form.email) return toast.error("Enter your email first");
+                        if (!form.email) return toast.error(t("Enter your email first"));
                         setMode("otp");
-                        toast("OTP sent", { description: "Use 123456 for this demo." });
+                        toast(t("OTP sent"), { description: t("Use 123456 for this demo.") });
                       }}
                     >
-                      Login via OTP
+                      {t("Login via OTP")}
                     </Button>
                   </div>
                   <DemoCredentials
@@ -379,19 +379,19 @@ function AuthExperience() {
                   <div className="mb-6 grid size-14 place-items-center rounded-2xl bg-primary/10 text-primary">
                     <LockKeyhole />
                   </div>
-                  <h2 className="text-3xl font-bold">Check your inbox</h2>
+                  <h2 className="text-3xl font-bold">{t("Check your inbox")}</h2>
                   <p className="mt-2 text-muted-foreground">
-                    Enter the six-digit code sent to {form.email}.
+                    {t("Enter the six-digit code sent to")} {form.email}.
                   </p>
                   <div className="mt-7">
                     <Field
-                      label="One-time password"
+                      label={t("One-time password")}
                       value={form.otp}
                       onChange={(v) => update("otp", v.replace(/\D/g, "").slice(0, 6))}
                       placeholder="123456"
                     />
                     <Button onClick={verifyOtp} variant="premium" className="mt-4 w-full">
-                      Verify and continue
+                      {t("Verify and continue")}
                     </Button>
                   </div>
                 </motion.div>
@@ -416,9 +416,9 @@ function AuthExperience() {
                   </div>
                   {step === 1 && (
                     <>
-                      <h2 className="text-3xl font-bold">Let’s build your profile</h2>
+                      <h2 className="text-3xl font-bold">{t("Let’s build your profile")}</h2>
                       <p className="mt-2 text-sm text-muted-foreground">
-                        Upload your resume for an instant head start.
+                        {t("Upload your resume for an instant head start.")}
                       </p>
                       <Button
                         variant="glass"
@@ -426,27 +426,27 @@ function AuthExperience() {
                         className="my-6 w-full border-dashed"
                       >
                         <Upload />
-                        {loading ? "Reading your resume…" : "Upload PDF, DOC or DOCX"}
+                        {loading ? t("Reading your resume…") : t("Upload PDF, DOC or DOCX")}
                       </Button>
                       <div className="grid gap-4 sm:grid-cols-2">
                         <Field
-                          label="First name"
+                          label={t("First name")}
                           value={form.firstName}
                           onChange={(v) => update("firstName", v)}
                         />
                         <Field
-                          label="Last name"
+                          label={t("Last name")}
                           value={form.lastName}
                           onChange={(v) => update("lastName", v)}
                         />
                         <Field
-                          label="Email"
+                          label={t("Email")}
                           type="email"
                           value={form.email}
                           onChange={(v) => update("email", v)}
                         />
                         <Field
-                          label="Phone number"
+                          label={t("Phone number")}
                           type="tel"
                           value={form.phone}
                           onChange={(v) => update("phone", v)}
@@ -458,19 +458,19 @@ function AuthExperience() {
                         disabled={!form.firstName || !form.lastName || !form.email || !form.phone}
                         onClick={() => setStep(2)}
                       >
-                        Continue
+                        {t("Continue")}
                       </Button>
                     </>
                   )}
                   {step === 2 && (
                     <>
-                      <h2 className="text-3xl font-bold">Secure your account</h2>
+                      <h2 className="text-3xl font-bold">{t("Secure your account")}</h2>
                       <p className="mt-2 text-sm text-muted-foreground">
-                        Create a strong password to protect your career data.
+                        {t("Create a strong password to protect your career data.")}
                       </p>
                       <div className="mt-7 space-y-4">
                         <Field
-                          label="Password"
+                          label={t("Password")}
                           type="password"
                           value={form.password}
                           onChange={(v) => update("password", v)}
@@ -493,16 +493,16 @@ function AuthExperience() {
                           ))}
                         </div>
                         <p className="text-xs text-muted-foreground">
-                          8+ characters with uppercase, lowercase, number and symbol.
+                          {t("8+ characters with uppercase, lowercase, number and symbol.")}
                         </p>
                         <Field
-                          label="Confirm password"
+                          label={t("Confirm password")}
                           type="password"
                           value={form.confirm}
                           onChange={(v) => update("confirm", v)}
                         />
                         <Button variant="premium" className="w-full" onClick={finishRegistration}>
-                          Create account
+                          {t("Create account")}
                         </Button>
                       </div>
                     </>
@@ -516,9 +516,9 @@ function AuthExperience() {
                       >
                         <Check className="size-10" />
                       </motion.div>
-                      <h2 className="mt-6 text-3xl font-bold">Account created</h2>
+                      <h2 className="mt-6 text-3xl font-bold">{t("Account created")}</h2>
                       <p className="mt-2 text-muted-foreground">
-                        Preparing your new career workspace…
+                        {t("Preparing your new career workspace…")}
                       </p>
                     </div>
                   )}
@@ -533,12 +533,13 @@ function AuthExperience() {
 }
 
 function AuthBack({ onClick }: { onClick: () => void }) {
+  const { t } = useT();
   return (
     <button
       onClick={onClick}
       className="mb-6 text-sm font-semibold text-muted-foreground hover:text-foreground"
     >
-      ← Back
+      ← {t("Back")}
     </button>
   );
 }
@@ -571,10 +572,11 @@ function Field({
   );
 }
 function DemoCredentials({ setEmail }: { setEmail: (email: string, password: string) => void }) {
+  const { t } = useT();
   return (
     <div className="mt-7 rounded-2xl border border-glass-border bg-muted/50 p-4">
       <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-        Demo access
+        {t("Demo access")}
       </p>
       <div className="grid gap-2 sm:grid-cols-2">
         <button
@@ -582,7 +584,7 @@ function DemoCredentials({ setEmail }: { setEmail: (email: string, password: str
           onClick={() => setEmail("free.demo@careerhub.com", "Free@123")}
           className="rounded-xl bg-background/70 p-3 text-left text-xs hover:bg-accent"
         >
-          <b>Free account</b>
+          <b>{t("Free account")}</b>
           <br />
           <span className="text-muted-foreground">free.demo@careerhub.com</span>
         </button>
@@ -591,7 +593,7 @@ function DemoCredentials({ setEmail }: { setEmail: (email: string, password: str
           onClick={() => setEmail("pro.demo@careerhub.com", "Pro@123")}
           className="rounded-xl bg-background/70 p-3 text-left text-xs hover:bg-accent"
         >
-          <b>PRO account</b>
+          <b>{t("PRO account")}</b>
           <br />
           <span className="text-muted-foreground">pro.demo@careerhub.com</span>
         </button>
@@ -765,9 +767,9 @@ function Workspace() {
                 <span className="text-xs text-primary">{t("3 new")}</span>
               </div>
               {[
-                "Your application at Arc is under review",
-                "New 96% job match found",
-                "Priya from Atlassian sent a message",
+                t("Your application at Arc is under review"),
+                t("New 96% job match found"),
+                t("Priya from Atlassian sent a message"),
               ].map((text, index) => (
                 <button
                   key={text}
@@ -781,7 +783,7 @@ function Workspace() {
                   />
                   <span className="text-sm">
                     {text}
-                    <small className="mt-1 block text-muted-foreground">{index + 1}h ago</small>
+                    <small className="mt-1 block text-muted-foreground">{index + 1}{t("h ago")}</small>
                   </span>
                 </button>
               ))}
@@ -840,28 +842,28 @@ function Dashboard({
         : ["Good evening", "🌙"];
   const metrics = [
     {
-      label: "Total applications",
+      label: t("Total applications"),
       value: apps.length,
       icon: BriefcaseBusiness,
-      note: "+12% this month",
+      note: t("+12% this month"),
     },
     {
-      label: "Active applications",
+      label: t("Active applications"),
       value: apps.filter((a) => ["Applied", "Reviewing"].includes(a.status)).length,
       icon: TrendingUp,
-      note: "Across 8 companies",
+      note: t("Across 8 companies"),
     },
     {
-      label: "Interview invites",
+      label: t("Interview invites"),
       value: apps.filter((a) => a.status === "Interview").length,
       icon: CalendarDays,
-      note: "+2 this week",
+      note: t("+2 this week"),
     },
     {
-      label: "Offers received",
+      label: t("Offers received"),
       value: apps.filter((a) => a.status === "Offer").length,
       icon: Award,
-      note: "Top 8% outcome",
+      note: t("Top 8% outcome"),
     },
   ];
   const chartData = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"].map((name, i) => ({
@@ -888,13 +890,13 @@ function Dashboard({
         <div className="glass-panel flex items-center gap-4 rounded-2xl p-4">
           <ProgressRing value={user.completion} />
           <div>
-            <p className="text-sm font-semibold">Profile strength</p>
-            <p className="text-xs text-muted-foreground">Add experience to reach 100%</p>
+            <p className="text-sm font-semibold">{t("Profile strength")}</p>
+            <p className="text-xs text-muted-foreground">{t("Add experience to reach 100%")}</p>
             <button
               onClick={() => navigate("profile")}
               className="mt-1 text-xs font-semibold text-primary"
             >
-              Improve profile →
+              {t("Improve profile")} →
             </button>
           </div>
         </div>
@@ -920,11 +922,11 @@ function Dashboard({
         <div className="glass-panel rounded-3xl p-4 sm:p-6">
           <div className="mb-6 flex items-center justify-between">
             <div>
-              <h2 className="font-bold">Application momentum</h2>
-              <p className="text-xs text-muted-foreground">Your search activity over six months</p>
+              <h2 className="font-bold">{t("Application momentum")}</h2>
+              <p className="text-xs text-muted-foreground">{t("Your search activity over six months")}</p>
             </div>
             <span className="rounded-full bg-success/10 px-3 py-1 text-xs font-semibold text-success">
-              Healthy trend
+              {t("Healthy trend")}
             </span>
           </div>
           <div className="h-72">
@@ -965,8 +967,8 @@ function Dashboard({
           </div>
         </div>
         <div className="glass-panel rounded-3xl p-5">
-          <h2 className="font-bold">Status mix</h2>
-          <p className="text-xs text-muted-foreground">Where applications stand</p>
+          <h2 className="font-bold">{t("Status mix")}</h2>
+          <p className="text-xs text-muted-foreground">{t("Where applications stand")}</p>
           <div className="h-52">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
@@ -1028,14 +1030,14 @@ function Dashboard({
       </section>
       <section className="mt-4 grid gap-4 lg:grid-cols-3">
         <Insight
-          title="Most applied company"
+          title={t("Most applied company")}
           value="Atlassian"
-          note="8 applications"
+          note={`8 ${t("applications")}`}
           icon={Users}
         />
-        <Insight title="Top location" value="Bengaluru" note="38% of applications" icon={Target} />
+        <Insight title={t("Top location")} value="Bengaluru" note={`38% ${t("applications")}`} icon={Target} />
         <Insight
-          title="Fastest-growing interest"
+          title={t("Fastest-growing interest")}
           value="AI Platforms"
           note="+42% in 30 days"
           icon={Zap}
@@ -1090,6 +1092,7 @@ function ProgressRing({ value }: { value: number }) {
 }
 
 function Applications({ apps }: { apps: Application[] }) {
+  const { t } = useT();
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState("All");
   const visible = apps.filter(
@@ -1104,7 +1107,7 @@ function Applications({ apps }: { apps: Application[] }) {
       subtitle="Search, filter, and follow every opportunity through your pipeline."
       actions={
         <span className="rounded-full bg-primary/10 px-3 py-1.5 text-xs font-semibold text-primary">
-          {visible.length} applications
+          {visible.length} {t("applications")}
         </span>
       }
     >
@@ -1115,7 +1118,7 @@ function Applications({ apps }: { apps: Application[] }) {
             aria-label="Search applications"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search role or company"
+            placeholder={t("Search role or company")}
             className="h-11 rounded-xl bg-background/60 pl-9"
           />
         </div>
@@ -1126,7 +1129,7 @@ function Applications({ apps }: { apps: Application[] }) {
           <SelectContent>
             {["All", "Applied", "Reviewing", "Interview", "Rejected", "Offer"].map((value) => (
               <SelectItem key={value} value={value}>
-                {value}
+                {t(value)}
               </SelectItem>
             ))}
           </SelectContent>
@@ -1156,8 +1159,8 @@ function Applications({ apps }: { apps: Application[] }) {
         {visible.length === 0 && (
           <Empty
             icon={BriefcaseBusiness}
-            title="No applications found"
-            copy="Try adjusting your search or filters."
+            title={t("No applications found")}
+            copy={t("Try adjusting your search or filters.")}
           />
         )}
       </div>
@@ -1165,6 +1168,7 @@ function Applications({ apps }: { apps: Application[] }) {
   );
 }
 function Status({ status }: { status: Application["status"] }) {
+  const { t } = useT();
   const classes =
     status === "Offer"
       ? "bg-success/12 text-success"
@@ -1174,12 +1178,13 @@ function Status({ status }: { status: Application["status"] }) {
           ? "bg-warning/12 text-warning"
           : "bg-primary/10 text-primary";
   return (
-    <span className={cn("rounded-full px-3 py-1.5 text-xs font-semibold", classes)}>{status}</span>
+    <span className={cn("rounded-full px-3 py-1.5 text-xs font-semibold", classes)}>{t(status)}</span>
   );
 }
 
 function Suggested({ user }: { user: Candidate }) {
   const { addApplication, applications } = useCareer();
+  const { t } = useT();
   const [quickOnly, setQuickOnly] = useState(false);
   const [showSaved, setShowSaved] = useState(false);
   const SAVED_KEY = `careerhub_saved_${user.id}`;
@@ -1197,10 +1202,10 @@ function Suggested({ user }: { user: Candidate }) {
   const toggleSave = (jobId: string, title: string) => {
     if (saved.includes(jobId)) {
       persistSaved(saved.filter((id) => id !== jobId));
-      toast.success(`Removed ${title} from saved`);
+      toast.success(`${t("Removed from saved")}: ${title}`);
     } else {
       persistSaved([...saved, jobId]);
-      toast.success(`Saved ${title}`);
+      toast.success(`${t("Saved")}: ${title}`);
     }
   };
   const appliedKeys = new Set(
@@ -1240,16 +1245,16 @@ function Suggested({ user }: { user: Candidate }) {
             onClick={() => setShowSaved((s) => !s)}
           >
             <Bookmark />
-            {showSaved ? "Showing saved" : `Saved jobs (${saved.length})`}
+            {showSaved ? t("Showing saved") : `${t("Saved jobs")} (${saved.length})`}
           </Button>
           {user.plan === "PRO" ? (
             <label className="glass-panel flex items-center gap-3 rounded-xl px-3 py-2 text-xs font-semibold">
               <Switch checked={quickOnly} onCheckedChange={setQuickOnly} />
-              Quick Apply only
+              {t("Quick Apply only")}
             </label>
           ) : (
             <span className="rounded-full bg-muted px-3 py-1.5 text-xs">
-              Upgrade for Quick Apply
+              {t("Upgrade for Quick Apply")}
             </span>
           )}
         </div>
@@ -1261,16 +1266,16 @@ function Suggested({ user }: { user: Candidate }) {
             <Bookmark />
           </div>
           <h3 className="mt-4 text-lg font-bold">
-            {showSaved ? "No saved jobs yet" : "No matching roles"}
+            {showSaved ? t("No saved jobs yet") : t("No matching roles")}
           </h3>
           <p className="mt-2 text-sm text-muted-foreground">
             {showSaved
-              ? "Tap the bookmark on any role to save it for later."
-              : "Try turning off filters to see all suggestions."}
+              ? t("Tap the bookmark on any role to save it for later.")
+              : t("Try turning off filters to see all suggestions.")}
           </p>
           {showSaved && (
             <Button variant="glass" className="mt-4" onClick={() => setShowSaved(false)}>
-              Browse suggestions
+              {t("Browse suggestions")}
             </Button>
           )}
         </div>
@@ -1292,7 +1297,7 @@ function Suggested({ user }: { user: Candidate }) {
                 </p>
               </div>
               <span className="ml-auto shrink-0 rounded-full bg-success/10 px-2.5 py-1 text-xs font-bold text-success">
-                {job.match}% match
+                {job.match}% {t("match")}
               </span>
             </div>
             <div className="my-5 flex flex-wrap gap-2">
@@ -1307,18 +1312,18 @@ function Suggested({ user }: { user: Candidate }) {
             </div>
             <div className="flex gap-2">
               <Button variant="glass" className="flex-1">
-                View role <ExternalLink />
+                {t("View role")} <ExternalLink />
               </Button>
               {user.plan === "PRO" && job.quick && (
                 isApplied(job) ? (
                   <Button variant="glass" disabled className="flex-1">
                     <Check />
-                    Applied
+                    {t("Applied")}
                   </Button>
                 ) : (
                   <Button variant="premium" onClick={() => setSelected(job)} className="flex-1">
                     <Zap />
-                    Quick Apply
+                    {t("Quick Apply")}
                   </Button>
                 )
               )}
@@ -1339,19 +1344,19 @@ function Suggested({ user }: { user: Candidate }) {
       <Dialog open={Boolean(selected)} onOpenChange={(open) => !open && setSelected(null)}>
         <DialogContent className="glass-panel rounded-3xl">
           <DialogHeader>
-            <DialogTitle>Quick Apply</DialogTitle>
+            <DialogTitle>{t("Quick Apply")}</DialogTitle>
             <DialogDescription>
-              Your verified CareerHub profile will be shared with {selected?.company}.
+              {t("Your verified CareerHub profile will be shared with")} {selected?.company}.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-3 rounded-2xl bg-muted/60 p-4 text-sm">
-            <Summary label="Candidate" value={`${user.firstName} ${user.lastName}`} />
-            <Summary label="Email" value={user.email} />
-            <Summary label="Resume" value={user.resume} />
+            <Summary label={t("Candidate")} value={`${user.firstName} ${user.lastName}`} />
+            <Summary label={t("Email")} value={user.email} />
+            <Summary label={t("Resume")} value={user.resume} />
           </div>
           <Button variant="premium" onClick={apply}>
             <Send />
-            Apply now
+            {t("Apply now")}
           </Button>
         </DialogContent>
       </Dialog>
@@ -1368,6 +1373,7 @@ function PremiumGate({
   copy: string;
   upgrade: () => void;
 }) {
+  const { t } = useT();
   return (
     <div className="relative overflow-hidden rounded-3xl">
       <div className="pointer-events-none grid grid-cols-2 gap-3 opacity-45 blur-[6px]">
@@ -1382,13 +1388,14 @@ function PremiumGate({
         <h2 className="mt-4 text-2xl font-bold">{title}</h2>
         <p className="mt-2 text-sm text-muted-foreground">{copy}</p>
         <Button variant="premium" onClick={upgrade} className="mt-5">
-          Upgrade to PRO
+          {t("Upgrade to PRO")}
         </Button>
       </div>
     </div>
   );
 }
 function Interviews({ user, upgrade }: { user: Candidate; upgrade: () => void }) {
+  const { t } = useT();
   const [selected, setSelected] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
@@ -1400,8 +1407,8 @@ function Interviews({ user, upgrade }: { user: Candidate; upgrade: () => void })
         subtitle="Targeted mock sessions designed around your role."
       >
         <PremiumGate
-          title="Practice like a PRO"
-          copy="Unlock role-based mock interviews, structured feedback, and scheduling."
+          title={t("Practice like a PRO")}
+          copy={t("Unlock role-based mock interviews, structured feedback, and scheduling.")}
           upgrade={upgrade}
         />
       </PageIntro>
@@ -1412,8 +1419,8 @@ function Interviews({ user, upgrade }: { user: Candidate; upgrade: () => void })
       "careerhub_interviews",
       JSON.stringify([...entries, { userId: user.id, role: selected, date, time }]),
     );
-    toast.success("Mock interview requested", {
-      description: "We’ll inform you once it is scheduled.",
+    toast.success(t("Mock interview requested"), {
+      description: t("We’ll inform you once it is scheduled."),
     });
     setSelected("");
     setDate("");
@@ -1439,7 +1446,7 @@ function Interviews({ user, upgrade }: { user: Candidate; upgrade: () => void })
               <BriefcaseBusiness />
             </div>
             <p className="mt-5 font-semibold">{role}</p>
-            <p className="mt-1 text-xs text-muted-foreground">45 min · AI-assisted feedback</p>
+            <p className="mt-1 text-xs text-muted-foreground">{t("45 min · AI-assisted feedback")}</p>
           </button>
         ))}
       </div>
@@ -1455,18 +1462,18 @@ function Interviews({ user, upgrade }: { user: Candidate; upgrade: () => void })
       >
         <DialogContent className="glass-panel rounded-3xl">
           <DialogHeader>
-            <DialogTitle>Schedule mock interview</DialogTitle>
+            <DialogTitle>{t("Schedule mock interview")}</DialogTitle>
             <DialogDescription>
-              {selected ? `${selected} · 45 min · AI-assisted feedback` : ""}
+              {selected ? `${selected} · ${t("45 min · AI-assisted feedback")}` : ""}
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4">
-            <Field label="Date" type="date" value={date} onChange={setDate} />
+            <Field label={t("Date")} type="date" value={date} onChange={setDate} />
             <Select value={time} onValueChange={setTime}>
               <div className="space-y-2">
-                <Label>Time slot</Label>
+                <Label>{t("Time slot")}</Label>
                 <SelectTrigger className="h-12 rounded-xl bg-glass">
-                  <SelectValue placeholder="Select a time" />
+                  <SelectValue placeholder={t("Select a time")} />
                 </SelectTrigger>
               </div>
               <SelectContent>
@@ -1478,7 +1485,7 @@ function Interviews({ user, upgrade }: { user: Candidate; upgrade: () => void })
               </SelectContent>
             </Select>
             <Button variant="premium" disabled={!date || !time} onClick={schedule}>
-              Setup interview
+              {t("Setup interview")}
             </Button>
           </div>
         </DialogContent>
@@ -1488,6 +1495,7 @@ function Interviews({ user, upgrade }: { user: Candidate; upgrade: () => void })
 }
 
 function Certifications({ user, upgrade }: { user: Candidate; upgrade: () => void }) {
+  const { t } = useT();
   const [query, setQuery] = useState("");
   if (user.plan === "FREE")
     return (
@@ -1497,8 +1505,8 @@ function Certifications({ user, upgrade }: { user: Candidate; upgrade: () => voi
         subtitle="Personalized learning matched to your next role."
       >
         <PremiumGate
-          title="Unlock curated certifications"
-          copy="Explore personalized certifications across engineering, cloud, AI, and product."
+          title={t("Unlock curated certifications")}
+          copy={t("Explore personalized certifications across engineering, cloud, AI, and product.")}
           upgrade={upgrade}
         />
       </PageIntro>
@@ -1518,7 +1526,7 @@ function Certifications({ user, upgrade }: { user: Candidate; upgrade: () => voi
             aria-label="Search certifications"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search catalog"
+            placeholder={t("Search catalog")}
             className="h-10 rounded-xl bg-glass pl-9"
           />
         </div>
@@ -1537,7 +1545,7 @@ function Certifications({ user, upgrade }: { user: Candidate; upgrade: () => voi
                   price === "Free" ? "bg-success/10 text-success" : "bg-primary/10 text-primary",
                 )}
               >
-                {price}
+                {price === "Free" ? t("Free") : price}
               </span>
             </div>
             <p className="mt-5 font-bold">{title}</p>
@@ -1547,7 +1555,7 @@ function Certifications({ user, upgrade }: { user: Candidate; upgrade: () => voi
               <span className="rounded-lg bg-muted px-2 py-1">{category}</span>
             </div>
             <Button variant="glass" className="mt-5 w-full">
-              View certification <ExternalLink />
+              {t("View certification")} <ExternalLink />
             </Button>
           </article>
         ))}
@@ -1557,6 +1565,7 @@ function Certifications({ user, upgrade }: { user: Candidate; upgrade: () => voi
 }
 
 function Messages({ user, upgrade }: { user: Candidate; upgrade: () => void }) {
+  const { t } = useT();
   const [active, setActive] = useState(0);
   const chats = [
     {
@@ -1616,7 +1625,7 @@ function Messages({ user, upgrade }: { user: Candidate; upgrade: () => void }) {
     const d = new Date(ts);
     const diff = (Date.now() - ts) / 86400000;
     if (diff < 1) return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-    if (diff < 2) return "Yesterday";
+    if (diff < 2) return t("Yesterday");
     if (diff < 7) return d.toLocaleDateString([], { weekday: "short" });
     return d.toLocaleDateString();
   };
@@ -1716,7 +1725,7 @@ function Messages({ user, upgrade }: { user: Candidate; upgrade: () => void }) {
             <Search className="absolute left-3 top-3 size-4 text-muted-foreground" />
             <Input
               aria-label="Search recruiters"
-              placeholder="Search recruiters"
+              placeholder={t("Search recruiters")}
               className="h-10 bg-background/50 pl-9"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
@@ -1724,7 +1733,7 @@ function Messages({ user, upgrade }: { user: Candidate; upgrade: () => void }) {
           </div>
           {filtered.length === 0 && (
             <p className="px-3 py-6 text-center text-xs text-muted-foreground">
-              No recruiters match "{query}"
+              {t("No recruiters match")} "{query}"
             </p>
           )}
           {filtered.map(({ c: chat, i }) => (
@@ -1774,9 +1783,9 @@ function Messages({ user, upgrade }: { user: Candidate; upgrade: () => void }) {
                     )}
                   >
                     {typing[i]
-                      ? "typing…"
+                      ? t("typing…")
                       : threads[i].length > 0
-                        ? (threads[i][threads[i].length - 1].from === "me" ? "You: " : "") +
+                        ? (threads[i][threads[i].length - 1].from === "me" ? t("You:") + " " : "") +
                           threads[i][threads[i].length - 1].text
                         : chat.message}
                   </p>
@@ -1810,9 +1819,9 @@ function Messages({ user, upgrade }: { user: Candidate; upgrade: () => void }) {
               <b className="block truncate">{activeChat.name}</b>
               <p className="truncate text-xs text-muted-foreground">
                 {typing[active] ? (
-                  <span className="text-success">typing…</span>
+                  <span className="text-success">{t("typing…")}</span>
                 ) : (
-                  <>online · {activeChat.company}</>
+                  <>{t("online")} · {activeChat.company}</>
                 )}
               </p>
             </div>
@@ -1842,7 +1851,7 @@ function Messages({ user, upgrade }: { user: Candidate; upgrade: () => void }) {
           </div>
           <div ref={scrollerRef} className="flex flex-1 flex-col gap-2 overflow-y-auto p-4 sm:p-6">
             <div className="mx-auto mb-2 rounded-full bg-muted/60 px-3 py-1 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
-              Today
+              {t("Today")}
             </div>
             {threads[active].map((m, idx) => (
               <div
@@ -1898,7 +1907,7 @@ function Messages({ user, upgrade }: { user: Candidate; upgrade: () => void }) {
             </button>
             <Input
               aria-label="Message"
-              placeholder="Type a message"
+              placeholder={t("Type a message")}
               className="h-11 min-w-0 flex-1 rounded-full bg-background/50"
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
@@ -1927,6 +1936,7 @@ function Messages({ user, upgrade }: { user: Candidate; upgrade: () => void }) {
 }
 
 function Integrations({ user, upgrade }: { user: Candidate; upgrade: () => void }) {
+  const { t } = useT();
   const [connected, setConnected] = useState<string[]>(() => {
     try {
       const all = JSON.parse(localStorage.getItem("careerhub_connected_apps") ?? "{}") as Record<
@@ -1946,8 +1956,8 @@ function Integrations({ user, upgrade }: { user: Candidate; upgrade: () => void 
         subtitle="Bring your job boards and coding profiles into one intelligent view."
       >
         <PremiumGate
-          title="Connect your career ecosystem"
-          copy="Sync job boards and coding platforms with CareerHub PRO."
+          title={t("Connect your career ecosystem")}
+          copy={t("Sync job boards and coding platforms with CareerHub PRO.")}
           upgrade={upgrade}
         />
       </PageIntro>
@@ -1962,17 +1972,17 @@ function Integrations({ user, upgrade }: { user: Candidate; upgrade: () => void 
       string[]
     >;
     localStorage.setItem("careerhub_connected_apps", JSON.stringify({ ...all, [user.id]: next }));
-    toast.success(next.includes(name) ? `${name} connected` : `${name} disconnected`);
+    toast.success(next.includes(name) ? `${name} ${t("connected")}` : `${name} ${t("disconnected")}`);
   };
   return (
     <PageIntro
       eyebrow="CONNECTED ECOSYSTEM"
       title="Your career, connected."
-      subtitle={`${connected.length} services are securely connected to your workspace.`}
+      subtitle={`${connected.length} ${t("services are securely connected to your workspace.")}`}
     >
       {Object.entries(platformGroups).map(([group, platforms]) => (
         <section key={group} className="mb-7">
-          <h2 className="mb-3 text-sm font-semibold text-muted-foreground">{group}</h2>
+          <h2 className="mb-3 text-sm font-semibold text-muted-foreground">{t(group)}</h2>
           <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
             {platforms.map((platform) => {
               const active = connected.includes(platform);
@@ -1984,7 +1994,7 @@ function Integrations({ user, upgrade }: { user: Candidate; upgrade: () => void 
                   <div className="min-w-0">
                     <p className="truncate font-semibold">{platform}</p>
                     <p className="text-xs text-muted-foreground">
-                      {active ? "Syncing activity" : "Not connected"}
+                      {active ? t("Syncing activity") : t("Not connected")}
                     </p>
                   </div>
                   <Button
@@ -1995,10 +2005,10 @@ function Integrations({ user, upgrade }: { user: Candidate; upgrade: () => void 
                     {active ? (
                       <>
                         <Check />
-                        Connected
+                        {t("Connected")}
                       </>
                     ) : (
-                      "Connect"
+                      t("Connect")
                     )}
                   </Button>
                 </div>
@@ -2013,12 +2023,13 @@ function Integrations({ user, upgrade }: { user: Candidate; upgrade: () => void 
 
 function Profile({ user, upgrade }: { user: Candidate; upgrade: () => void }) {
   const { updateUser, logout } = useCareer();
+  const { t } = useT();
   const [editing, setEditing] = useState(false);
   const [form, setForm] = useState(user);
   const save = () => {
     updateUser({ ...form, completion: Math.min(100, form.completion + 4) });
     setEditing(false);
-    toast.success("Profile updated");
+    toast.success(t("Profile updated"));
   };
   const verify = () => {
     if (user.plan === "FREE") return upgrade();
@@ -2027,8 +2038,8 @@ function Profile({ user, upgrade }: { user: Candidate; upgrade: () => void }) {
       JSON.stringify({ userId: user.id, status: "pending", date: new Date().toISOString() }),
     );
     updateUser({ verified: true });
-    toast.success("Verification Request Received", {
-      description: "Profile details were successfully sent for verification.",
+    toast.success(t("Verification Request Received"), {
+      description: t("Profile details were successfully sent for verification."),
     });
   };
   return (
@@ -2038,7 +2049,7 @@ function Profile({ user, upgrade }: { user: Candidate; upgrade: () => void }) {
       subtitle="Keep your candidate identity polished, complete, and ready to share."
       actions={
         <Button variant="glass" onClick={() => setEditing(!editing)}>
-          {editing ? "Cancel" : "Edit profile"}
+          {editing ? t("Cancel") : t("Edit profile")}
         </Button>
       }
     >
@@ -2055,7 +2066,7 @@ function Profile({ user, upgrade }: { user: Candidate; upgrade: () => void }) {
           <div className="my-6 flex justify-center">
             <ProgressRing value={user.completion} />
           </div>
-          <p className="text-sm font-semibold">Profile Completion: {user.completion}%</p>
+          <p className="text-sm font-semibold">{t("Profile Completion:")} {user.completion}%</p>
           <Button
             variant={user.verified ? "glass" : "premium"}
             onClick={verify}
@@ -2063,61 +2074,61 @@ function Profile({ user, upgrade }: { user: Candidate; upgrade: () => void }) {
             disabled={user.verified}
           >
             <FileCheck2 />
-            {user.verified ? "Verified profile" : "Verify profile"}
+            {user.verified ? t("Verified profile") : t("Verify profile")}
           </Button>
           {user.plan === "FREE" && (
-            <p className="mt-2 text-xs text-muted-foreground">PRO feature</p>
+            <p className="mt-2 text-xs text-muted-foreground">{t("PRO feature")}</p>
           )}
         </div>
         <div className="glass-panel rounded-3xl p-5 sm:p-7">
           <div className="grid gap-5 sm:grid-cols-2">
             <ProfileField
-              label="First name"
+              label={t("First name")}
               value={form.firstName}
               disabled={!editing}
               onChange={(v) => setForm({ ...form, firstName: v })}
             />
             <ProfileField
-              label="Last name"
+              label={t("Last name")}
               value={form.lastName}
               disabled={!editing}
               onChange={(v) => setForm({ ...form, lastName: v })}
             />
-            <ProfileField label="Email" value={form.email} disabled />
+            <ProfileField label={t("Email")} value={form.email} disabled />
             <ProfileField
-              label="Phone"
+              label={t("Phone")}
               value={form.phone}
               disabled={!editing}
               onChange={(v) => setForm({ ...form, phone: v })}
             />
             <ProfileField
-              label="Headline"
+              label={t("Headline")}
               value={form.headline}
               disabled={!editing}
               onChange={(v) => setForm({ ...form, headline: v })}
               wide
             />
             <ProfileField
-              label="Location"
+              label={t("Location")}
               value={form.location}
               disabled={!editing}
               onChange={(v) => setForm({ ...form, location: v })}
             />
             <ProfileField
-              label="Education"
+              label={t("Education")}
               value={form.education ?? ""}
               disabled={!editing}
               onChange={(v) => setForm({ ...form, education: v })}
             />
             <ProfileField
-              label="Experience"
+              label={t("Experience")}
               value={form.experience ?? ""}
               disabled={!editing}
               onChange={(v) => setForm({ ...form, experience: v })}
               wide
             />
             <ProfileField
-              label="Skills"
+              label={t("Skills")}
               value={form.skills.join(", ")}
               disabled={!editing}
               onChange={(v) => setForm({ ...form, skills: v.split(",").map((s) => s.trim()) })}
@@ -2126,13 +2137,13 @@ function Profile({ user, upgrade }: { user: Candidate; upgrade: () => void }) {
           </div>
           {editing && (
             <Button variant="premium" onClick={save} className="mt-6">
-              Save changes
+              {t("Save changes")}
             </Button>
           )}
           <div className="mt-8 border-t border-border pt-6">
             <Button variant="outline" onClick={logout}>
               <LogOut />
-              Log out
+              {t("Log out")}
             </Button>
           </div>
         </div>
@@ -2169,6 +2180,7 @@ function ProfileField({
 
 function ProPage({ user }: { user: Candidate }) {
   const { updateUser } = useCareer();
+  const { t } = useT();
   const [country, setCountry] = useState("India");
   const [paying, setPaying] = useState(false);
   const pricing: Record<string, [string, string[]]> = {
@@ -2190,8 +2202,8 @@ function ProPage({ user }: { user: Candidate }) {
         JSON.stringify({ plan: "PRO", country, price, date: new Date().toISOString() }),
       );
       setPaying(false);
-      toast.success("Welcome to CareerHub PRO ✨", {
-        description: "Every premium feature is now unlocked.",
+      toast.success(t("Welcome to CareerHub PRO ✨"), {
+        description: t("Every premium feature is now unlocked."),
       });
     }, 1200);
   };
@@ -2206,25 +2218,25 @@ function ProPage({ user }: { user: Candidate }) {
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
               <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-bold text-primary">
-                MOST POPULAR
+                {t("MOST POPULAR")}
               </span>
               <h2 className="mt-5 text-3xl font-bold">CareerHub PRO</h2>
             </div>
             <div className="text-right">
               <p className="text-4xl font-bold">{price}</p>
-              <p className="text-sm text-muted-foreground">per month</p>
+              <p className="text-sm text-muted-foreground">{t("per month")}</p>
             </div>
           </div>
           <div className="my-7 grid gap-3 sm:grid-cols-2">
             {[
-              "Connect apps",
-              "Mock interviews",
-              "Profile verification",
-              "Quick Apply",
-              "Recruiter messaging",
-              "Certifications",
-              "Advanced analytics",
-              "Priority support",
+              t("Connect apps"),
+              t("Mock interviews"),
+              t("Profile verification"),
+              t("Quick Apply"),
+              t("Recruiter messaging"),
+              t("Certifications"),
+              t("Advanced analytics"),
+              t("Priority support"),
             ].map((feature) => (
               <div key={feature} className="flex items-center gap-2 text-sm">
                 <span className="grid size-5 place-items-center rounded-full bg-success/15 text-success">
@@ -2241,15 +2253,15 @@ function ProPage({ user }: { user: Candidate }) {
             className="w-full"
           >
             {user.plan === "PRO"
-              ? "Your PRO plan is active"
+              ? t("Your PRO plan is active")
               : paying
-                ? "Securing your upgrade…"
-                : "Upgrade to PRO"}
+                ? t("Securing your upgrade…")
+                : t("Upgrade to PRO")}
           </Button>
         </div>
         <div className="space-y-4">
           <div className="glass-panel rounded-3xl p-6">
-            <Label>Billing country</Label>
+            <Label>{t("Billing country")}</Label>
             <Select value={country} onValueChange={setCountry}>
               <SelectTrigger className="mt-2 h-12 rounded-xl bg-background/50">
                 <SelectValue />
@@ -2263,7 +2275,7 @@ function ProPage({ user }: { user: Candidate }) {
               </SelectContent>
             </Select>
             <p className="mt-4 text-xs text-muted-foreground">
-              Payment methods update for your region.
+              {t("Payment methods update for your region.")}
             </p>
             <div className="mt-3 flex flex-wrap gap-2">
               {methods.map((method) => (
@@ -2277,8 +2289,8 @@ function ProPage({ user }: { user: Candidate }) {
             <div className="flex items-center gap-3">
               <LockKeyhole className="text-success" />
               <div>
-                <p className="font-semibold">Secure mock checkout</p>
-                <p className="text-xs text-muted-foreground">No real payment is processed.</p>
+                <p className="font-semibold">{t("Secure mock checkout")}</p>
+                <p className="text-xs text-muted-foreground">{t("No real payment is processed.")}</p>
               </div>
             </div>
           </div>
@@ -2290,6 +2302,7 @@ function ProPage({ user }: { user: Candidate }) {
 
 function SettingsPage() {
   const { theme, toggleTheme } = useCareer();
+  const { t } = useT();
   return (
     <PageIntro
       eyebrow="PREFERENCES"
@@ -2299,20 +2312,20 @@ function SettingsPage() {
       <div className="glass-panel max-w-3xl divide-y divide-border rounded-3xl px-5">
         <Setting
           icon={theme === "light" ? Sun : Moon}
-          title="Appearance"
-          copy="Switch between light and dark glass."
+          title={t("Appearance")}
+          copy={t("Switch between light and dark glass.")}
           control={<Switch checked={theme === "dark"} onCheckedChange={toggleTheme} />}
         />
         <Setting
           icon={Bell}
-          title="Smart notifications"
-          copy="Application updates, matches, and interviews."
+          title={t("Smart notifications")}
+          copy={t("Application updates, matches, and interviews.")}
           control={<Switch defaultChecked />}
         />
         <Setting
           icon={Sparkles}
-          title="AI recommendations"
-          copy="Personalized roles based on your profile."
+          title={t("AI recommendations")}
+          copy={t("Personalized roles based on your profile.")}
           control={<Switch defaultChecked />}
         />
       </div>
