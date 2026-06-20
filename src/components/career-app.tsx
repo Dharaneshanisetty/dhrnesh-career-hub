@@ -2302,6 +2302,7 @@ function ProPage({ user }: { user: Candidate }) {
 
 function SettingsPage() {
   const { theme, toggleTheme } = useCareer();
+  const { t } = useT();
   return (
     <PageIntro
       eyebrow="PREFERENCES"
@@ -2311,20 +2312,20 @@ function SettingsPage() {
       <div className="glass-panel max-w-3xl divide-y divide-border rounded-3xl px-5">
         <Setting
           icon={theme === "light" ? Sun : Moon}
-          title="Appearance"
-          copy="Switch between light and dark glass."
+          title={t("Appearance")}
+          copy={t("Switch between light and dark glass.")}
           control={<Switch checked={theme === "dark"} onCheckedChange={toggleTheme} />}
         />
         <Setting
           icon={Bell}
-          title="Smart notifications"
-          copy="Application updates, matches, and interviews."
+          title={t("Smart notifications")}
+          copy={t("Application updates, matches, and interviews.")}
           control={<Switch defaultChecked />}
         />
         <Setting
           icon={Sparkles}
-          title="AI recommendations"
-          copy="Personalized roles based on your profile."
+          title={t("AI recommendations")}
+          copy={t("Personalized roles based on your profile.")}
           control={<Switch defaultChecked />}
         />
       </div>
