@@ -161,6 +161,7 @@ export function CareerApp() {
 
 function AuthExperience() {
   const { login, register, toggleTheme, theme } = useCareer();
+  const { t } = useT();
   const [mode, setMode] = useState<"welcome" | "login" | "register" | "otp">("welcome");
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -185,15 +186,15 @@ function AuthExperience() {
       setLoading(false);
       if (!form.password) {
         setMode("otp");
-        toast("OTP sent", { description: "Use 123456 for this demo." });
+        toast(t("OTP sent"), { description: t("Use 123456 for this demo.") });
         return;
       }
-      if (!login(form.email, form.password)) toast.error("Email or password is incorrect");
+      if (!login(form.email, form.password)) toast.error(t("Email or password is incorrect"));
     }, 650);
   };
   const verifyOtp = () => {
     if (form.otp !== "123456" || !login(form.email, "123456"))
-      toast.error("Enter the demo OTP 123456");
+      toast.error(t("Enter the demo OTP 123456"));
   };
   const parseResume = () => {
     setLoading(true);
@@ -206,12 +207,12 @@ function AuthExperience() {
         phone: "+91 98765 12345",
       }));
       setLoading(false);
-      toast.success("Information extracted successfully");
+      toast.success(t("Information extracted successfully"));
     }, 900);
   };
   const finishRegistration = () => {
     if (passwordScore < 5 || form.password !== form.confirm) {
-      toast.error("Please meet all password requirements");
+      toast.error(t("Please meet all password requirements"));
       return;
     }
     const candidate: Candidate = {
@@ -222,7 +223,7 @@ function AuthExperience() {
       phone: form.phone,
       password: form.password,
       plan: "FREE",
-      headline: "Open to new opportunities",
+      headline: t("Open to new opportunities"),
       location: "India",
       skills: [],
       completion: 35,
