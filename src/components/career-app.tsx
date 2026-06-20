@@ -1725,7 +1725,7 @@ function Messages({ user, upgrade }: { user: Candidate; upgrade: () => void }) {
             <Search className="absolute left-3 top-3 size-4 text-muted-foreground" />
             <Input
               aria-label="Search recruiters"
-              placeholder="Search recruiters"
+              placeholder={t("Search recruiters")}
               className="h-10 bg-background/50 pl-9"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
@@ -1733,7 +1733,7 @@ function Messages({ user, upgrade }: { user: Candidate; upgrade: () => void }) {
           </div>
           {filtered.length === 0 && (
             <p className="px-3 py-6 text-center text-xs text-muted-foreground">
-              No recruiters match "{query}"
+              {t("No recruiters match")} "{query}"
             </p>
           )}
           {filtered.map(({ c: chat, i }) => (
@@ -1783,9 +1783,9 @@ function Messages({ user, upgrade }: { user: Candidate; upgrade: () => void }) {
                     )}
                   >
                     {typing[i]
-                      ? "typing…"
+                      ? t("typing…")
                       : threads[i].length > 0
-                        ? (threads[i][threads[i].length - 1].from === "me" ? "You: " : "") +
+                        ? (threads[i][threads[i].length - 1].from === "me" ? t("You:") + " " : "") +
                           threads[i][threads[i].length - 1].text
                         : chat.message}
                   </p>
@@ -1819,9 +1819,9 @@ function Messages({ user, upgrade }: { user: Candidate; upgrade: () => void }) {
               <b className="block truncate">{activeChat.name}</b>
               <p className="truncate text-xs text-muted-foreground">
                 {typing[active] ? (
-                  <span className="text-success">typing…</span>
+                  <span className="text-success">{t("typing…")}</span>
                 ) : (
-                  <>online · {activeChat.company}</>
+                  <>{t("online")} · {activeChat.company}</>
                 )}
               </p>
             </div>
@@ -1851,7 +1851,7 @@ function Messages({ user, upgrade }: { user: Candidate; upgrade: () => void }) {
           </div>
           <div ref={scrollerRef} className="flex flex-1 flex-col gap-2 overflow-y-auto p-4 sm:p-6">
             <div className="mx-auto mb-2 rounded-full bg-muted/60 px-3 py-1 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
-              Today
+              {t("Today")}
             </div>
             {threads[active].map((m, idx) => (
               <div
@@ -1907,7 +1907,7 @@ function Messages({ user, upgrade }: { user: Candidate; upgrade: () => void }) {
             </button>
             <Input
               aria-label="Message"
-              placeholder="Type a message"
+              placeholder={t("Type a message")}
               className="h-11 min-w-0 flex-1 rounded-full bg-background/50"
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
