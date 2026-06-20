@@ -379,19 +379,19 @@ function AuthExperience() {
                   <div className="mb-6 grid size-14 place-items-center rounded-2xl bg-primary/10 text-primary">
                     <LockKeyhole />
                   </div>
-                  <h2 className="text-3xl font-bold">Check your inbox</h2>
+                  <h2 className="text-3xl font-bold">{t("Check your inbox")}</h2>
                   <p className="mt-2 text-muted-foreground">
-                    Enter the six-digit code sent to {form.email}.
+                    {t("Enter the six-digit code sent to")} {form.email}.
                   </p>
                   <div className="mt-7">
                     <Field
-                      label="One-time password"
+                      label={t("One-time password")}
                       value={form.otp}
                       onChange={(v) => update("otp", v.replace(/\D/g, "").slice(0, 6))}
                       placeholder="123456"
                     />
                     <Button onClick={verifyOtp} variant="premium" className="mt-4 w-full">
-                      Verify and continue
+                      {t("Verify and continue")}
                     </Button>
                   </div>
                 </motion.div>
@@ -416,9 +416,9 @@ function AuthExperience() {
                   </div>
                   {step === 1 && (
                     <>
-                      <h2 className="text-3xl font-bold">Let’s build your profile</h2>
+                      <h2 className="text-3xl font-bold">{t("Let’s build your profile")}</h2>
                       <p className="mt-2 text-sm text-muted-foreground">
-                        Upload your resume for an instant head start.
+                        {t("Upload your resume for an instant head start.")}
                       </p>
                       <Button
                         variant="glass"
@@ -426,27 +426,27 @@ function AuthExperience() {
                         className="my-6 w-full border-dashed"
                       >
                         <Upload />
-                        {loading ? "Reading your resume…" : "Upload PDF, DOC or DOCX"}
+                        {loading ? t("Reading your resume…") : t("Upload PDF, DOC or DOCX")}
                       </Button>
                       <div className="grid gap-4 sm:grid-cols-2">
                         <Field
-                          label="First name"
+                          label={t("First name")}
                           value={form.firstName}
                           onChange={(v) => update("firstName", v)}
                         />
                         <Field
-                          label="Last name"
+                          label={t("Last name")}
                           value={form.lastName}
                           onChange={(v) => update("lastName", v)}
                         />
                         <Field
-                          label="Email"
+                          label={t("Email")}
                           type="email"
                           value={form.email}
                           onChange={(v) => update("email", v)}
                         />
                         <Field
-                          label="Phone number"
+                          label={t("Phone number")}
                           type="tel"
                           value={form.phone}
                           onChange={(v) => update("phone", v)}
@@ -458,19 +458,19 @@ function AuthExperience() {
                         disabled={!form.firstName || !form.lastName || !form.email || !form.phone}
                         onClick={() => setStep(2)}
                       >
-                        Continue
+                        {t("Continue")}
                       </Button>
                     </>
                   )}
                   {step === 2 && (
                     <>
-                      <h2 className="text-3xl font-bold">Secure your account</h2>
+                      <h2 className="text-3xl font-bold">{t("Secure your account")}</h2>
                       <p className="mt-2 text-sm text-muted-foreground">
-                        Create a strong password to protect your career data.
+                        {t("Create a strong password to protect your career data.")}
                       </p>
                       <div className="mt-7 space-y-4">
                         <Field
-                          label="Password"
+                          label={t("Password")}
                           type="password"
                           value={form.password}
                           onChange={(v) => update("password", v)}
@@ -493,16 +493,16 @@ function AuthExperience() {
                           ))}
                         </div>
                         <p className="text-xs text-muted-foreground">
-                          8+ characters with uppercase, lowercase, number and symbol.
+                          {t("8+ characters with uppercase, lowercase, number and symbol.")}
                         </p>
                         <Field
-                          label="Confirm password"
+                          label={t("Confirm password")}
                           type="password"
                           value={form.confirm}
                           onChange={(v) => update("confirm", v)}
                         />
                         <Button variant="premium" className="w-full" onClick={finishRegistration}>
-                          Create account
+                          {t("Create account")}
                         </Button>
                       </div>
                     </>
@@ -516,9 +516,9 @@ function AuthExperience() {
                       >
                         <Check className="size-10" />
                       </motion.div>
-                      <h2 className="mt-6 text-3xl font-bold">Account created</h2>
+                      <h2 className="mt-6 text-3xl font-bold">{t("Account created")}</h2>
                       <p className="mt-2 text-muted-foreground">
-                        Preparing your new career workspace…
+                        {t("Preparing your new career workspace…")}
                       </p>
                     </div>
                   )}
