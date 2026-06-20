@@ -295,28 +295,28 @@ function AuthExperience() {
                     <BrandMark />
                     <span className="text-xl font-bold">CareerHub</span>
                   </div>
-                  <p className="mb-3 text-sm font-semibold text-primary">YOUR CAREER, ORGANIZED</p>
+                  <p className="mb-3 text-sm font-semibold text-primary">{t("YOUR CAREER, ORGANIZED")}</p>
                   <h2 className="font-display text-4xl font-bold tracking-[-0.04em] sm:text-5xl">
-                    Track every application.
+                    {t("Track every application.")}
                     <br />
-                    Land what’s next.
+                    {t("Land what’s next.")}
                   </h2>
                   <p className="mt-5 max-w-md text-muted-foreground">
-                    A private, intelligent workspace for your entire job search.
+                    {t("A private, intelligent workspace for your entire job search.")}
                   </p>
                   <div className="mt-10 grid gap-3">
                     <Button variant="premium" onClick={() => setMode("register")} className="h-13">
-                      Create account <ChevronRight />
+                      {t("Create account")} <ChevronRight />
                     </Button>
                     <Button variant="glass" onClick={() => setMode("login")} className="h-13">
-                      Sign in
+                      {t("Sign in")}
                     </Button>
                   </div>
                   <button
                     onClick={() => setMode("login")}
                     className="mt-8 w-full text-center text-xs text-muted-foreground underline-offset-4 hover:underline"
                   >
-                    Explore with demo accounts
+                    {t("Explore with demo accounts")}
                   </button>
                 </motion.div>
               )}
@@ -328,40 +328,40 @@ function AuthExperience() {
                   animate={{ opacity: 1, x: 0 }}
                 >
                   <AuthBack onClick={() => setMode("welcome")} />
-                  <p className="text-sm font-semibold text-primary">WELCOME BACK</p>
-                  <h2 className="mt-2 text-4xl font-bold tracking-tight">Sign in to CareerHub</h2>
+                  <p className="text-sm font-semibold text-primary">{t("WELCOME BACK")}</p>
+                  <h2 className="mt-2 text-4xl font-bold tracking-tight">{t("Sign in to CareerHub")}</h2>
                   <p className="mt-2 text-sm text-muted-foreground">
-                    Continue your journey from exactly where you left off.
+                    {t("Continue your journey from exactly where you left off.")}
                   </p>
                   <div className="mt-8 space-y-4">
                     <Field
-                      label="Email address"
+                      label={t("Email address")}
                       type="email"
                       value={form.email}
                       onChange={(v) => update("email", v)}
                       placeholder="you@example.com"
                     />
                     <Field
-                      label="Password"
+                      label={t("Password")}
                       type="password"
                       value={form.password}
                       onChange={(v) => update("password", v)}
-                      placeholder="Leave blank for OTP"
+                      placeholder={t("Leave blank for OTP")}
                     />
                     <Button type="submit" variant="premium" className="w-full">
-                      {loading ? "Signing in…" : "Sign in"}
+                      {loading ? t("Signing in…") : t("Sign in")}
                     </Button>
                     <Button
                       type="button"
                       variant="glass"
                       className="w-full"
                       onClick={() => {
-                        if (!form.email) return toast.error("Enter your email first");
+                        if (!form.email) return toast.error(t("Enter your email first"));
                         setMode("otp");
-                        toast("OTP sent", { description: "Use 123456 for this demo." });
+                        toast(t("OTP sent"), { description: t("Use 123456 for this demo.") });
                       }}
                     >
-                      Login via OTP
+                      {t("Login via OTP")}
                     </Button>
                   </div>
                   <DemoCredentials
