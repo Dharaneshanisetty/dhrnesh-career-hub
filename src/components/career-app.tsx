@@ -1495,6 +1495,7 @@ function Interviews({ user, upgrade }: { user: Candidate; upgrade: () => void })
 }
 
 function Certifications({ user, upgrade }: { user: Candidate; upgrade: () => void }) {
+  const { t } = useT();
   const [query, setQuery] = useState("");
   if (user.plan === "FREE")
     return (
@@ -1504,8 +1505,8 @@ function Certifications({ user, upgrade }: { user: Candidate; upgrade: () => voi
         subtitle="Personalized learning matched to your next role."
       >
         <PremiumGate
-          title="Unlock curated certifications"
-          copy="Explore personalized certifications across engineering, cloud, AI, and product."
+          title={t("Unlock curated certifications")}
+          copy={t("Explore personalized certifications across engineering, cloud, AI, and product.")}
           upgrade={upgrade}
         />
       </PageIntro>
@@ -1525,7 +1526,7 @@ function Certifications({ user, upgrade }: { user: Candidate; upgrade: () => voi
             aria-label="Search certifications"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search catalog"
+            placeholder={t("Search catalog")}
             className="h-10 rounded-xl bg-glass pl-9"
           />
         </div>
@@ -1544,7 +1545,7 @@ function Certifications({ user, upgrade }: { user: Candidate; upgrade: () => voi
                   price === "Free" ? "bg-success/10 text-success" : "bg-primary/10 text-primary",
                 )}
               >
-                {price}
+                {price === "Free" ? t("Free") : price}
               </span>
             </div>
             <p className="mt-5 font-bold">{title}</p>
@@ -1554,7 +1555,7 @@ function Certifications({ user, upgrade }: { user: Candidate; upgrade: () => voi
               <span className="rounded-lg bg-muted px-2 py-1">{category}</span>
             </div>
             <Button variant="glass" className="mt-5 w-full">
-              View certification <ExternalLink />
+              {t("View certification")} <ExternalLink />
             </Button>
           </article>
         ))}
