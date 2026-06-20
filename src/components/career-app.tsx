@@ -842,28 +842,28 @@ function Dashboard({
         : ["Good evening", "🌙"];
   const metrics = [
     {
-      label: "Total applications",
+      label: t("Total applications"),
       value: apps.length,
       icon: BriefcaseBusiness,
-      note: "+12% this month",
+      note: t("+12% this month"),
     },
     {
-      label: "Active applications",
+      label: t("Active applications"),
       value: apps.filter((a) => ["Applied", "Reviewing"].includes(a.status)).length,
       icon: TrendingUp,
-      note: "Across 8 companies",
+      note: t("Across 8 companies"),
     },
     {
-      label: "Interview invites",
+      label: t("Interview invites"),
       value: apps.filter((a) => a.status === "Interview").length,
       icon: CalendarDays,
-      note: "+2 this week",
+      note: t("+2 this week"),
     },
     {
-      label: "Offers received",
+      label: t("Offers received"),
       value: apps.filter((a) => a.status === "Offer").length,
       icon: Award,
-      note: "Top 8% outcome",
+      note: t("Top 8% outcome"),
     },
   ];
   const chartData = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"].map((name, i) => ({
@@ -890,13 +890,13 @@ function Dashboard({
         <div className="glass-panel flex items-center gap-4 rounded-2xl p-4">
           <ProgressRing value={user.completion} />
           <div>
-            <p className="text-sm font-semibold">Profile strength</p>
-            <p className="text-xs text-muted-foreground">Add experience to reach 100%</p>
+            <p className="text-sm font-semibold">{t("Profile strength")}</p>
+            <p className="text-xs text-muted-foreground">{t("Add experience to reach 100%")}</p>
             <button
               onClick={() => navigate("profile")}
               className="mt-1 text-xs font-semibold text-primary"
             >
-              Improve profile →
+              {t("Improve profile")} →
             </button>
           </div>
         </div>
@@ -922,11 +922,11 @@ function Dashboard({
         <div className="glass-panel rounded-3xl p-4 sm:p-6">
           <div className="mb-6 flex items-center justify-between">
             <div>
-              <h2 className="font-bold">Application momentum</h2>
-              <p className="text-xs text-muted-foreground">Your search activity over six months</p>
+              <h2 className="font-bold">{t("Application momentum")}</h2>
+              <p className="text-xs text-muted-foreground">{t("Your search activity over six months")}</p>
             </div>
             <span className="rounded-full bg-success/10 px-3 py-1 text-xs font-semibold text-success">
-              Healthy trend
+              {t("Healthy trend")}
             </span>
           </div>
           <div className="h-72">
@@ -967,8 +967,8 @@ function Dashboard({
           </div>
         </div>
         <div className="glass-panel rounded-3xl p-5">
-          <h2 className="font-bold">Status mix</h2>
-          <p className="text-xs text-muted-foreground">Where applications stand</p>
+          <h2 className="font-bold">{t("Status mix")}</h2>
+          <p className="text-xs text-muted-foreground">{t("Where applications stand")}</p>
           <div className="h-52">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
@@ -1030,14 +1030,14 @@ function Dashboard({
       </section>
       <section className="mt-4 grid gap-4 lg:grid-cols-3">
         <Insight
-          title="Most applied company"
+          title={t("Most applied company")}
           value="Atlassian"
-          note="8 applications"
+          note={`8 ${t("applications")}`}
           icon={Users}
         />
-        <Insight title="Top location" value="Bengaluru" note="38% of applications" icon={Target} />
+        <Insight title={t("Top location")} value="Bengaluru" note={`38% ${t("applications")}`} icon={Target} />
         <Insight
-          title="Fastest-growing interest"
+          title={t("Fastest-growing interest")}
           value="AI Platforms"
           note="+42% in 30 days"
           icon={Zap}
