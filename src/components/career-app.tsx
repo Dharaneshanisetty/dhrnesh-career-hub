@@ -1565,6 +1565,7 @@ function Certifications({ user, upgrade }: { user: Candidate; upgrade: () => voi
 }
 
 function Messages({ user, upgrade }: { user: Candidate; upgrade: () => void }) {
+  const { t } = useT();
   const [active, setActive] = useState(0);
   const chats = [
     {
@@ -1624,7 +1625,7 @@ function Messages({ user, upgrade }: { user: Candidate; upgrade: () => void }) {
     const d = new Date(ts);
     const diff = (Date.now() - ts) / 86400000;
     if (diff < 1) return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-    if (diff < 2) return "Yesterday";
+    if (diff < 2) return t("Yesterday");
     if (diff < 7) return d.toLocaleDateString([], { weekday: "short" });
     return d.toLocaleDateString();
   };
