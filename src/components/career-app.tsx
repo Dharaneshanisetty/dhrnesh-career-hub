@@ -258,23 +258,22 @@ function AuthExperience() {
             </div>
             <div>
               <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-glass-border bg-glass px-3 py-1.5 text-xs font-semibold text-primary">
-                <Sparkles className="size-3.5" /> Intelligence for your career
+                <Sparkles className="size-3.5" /> {t("Intelligence for your career")}
               </div>
               <h1 className="max-w-xl font-display text-6xl font-bold leading-[1.02] tracking-[-0.055em]">
-                Every opportunity.
+                {t("Every opportunity.")}
                 <br />
-                <span className="text-primary">One beautiful view.</span>
+                <span className="text-primary">{t("One beautiful view.")}</span>
               </h1>
               <p className="mt-6 max-w-md text-lg leading-relaxed text-muted-foreground">
-                Track applications, discover stronger matches, and move through your career with
-                clarity.
+                {t("Track applications, discover stronger matches, and move through your career with clarity.")}
               </p>
             </div>
             <div className="grid grid-cols-3 gap-3">
               {[
-                ["70+", "ATS partners"],
-                ["94%", "match accuracy"],
-                ["2.4×", "faster search"],
+                ["70+", t("ATS partners")],
+                ["94%", t("match accuracy")],
+                ["2.4×", t("faster search")],
               ].map(([metric, label]) => (
                 <div key={label} className="glass-panel rounded-2xl p-4">
                   <p className="text-xl font-bold">{metric}</p>
