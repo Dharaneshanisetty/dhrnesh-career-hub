@@ -2023,12 +2023,13 @@ function Integrations({ user, upgrade }: { user: Candidate; upgrade: () => void 
 
 function Profile({ user, upgrade }: { user: Candidate; upgrade: () => void }) {
   const { updateUser, logout } = useCareer();
+  const { t } = useT();
   const [editing, setEditing] = useState(false);
   const [form, setForm] = useState(user);
   const save = () => {
     updateUser({ ...form, completion: Math.min(100, form.completion + 4) });
     setEditing(false);
-    toast.success("Profile updated");
+    toast.success(t("Profile updated"));
   };
   const verify = () => {
     if (user.plan === "FREE") return upgrade();
@@ -2037,8 +2038,8 @@ function Profile({ user, upgrade }: { user: Candidate; upgrade: () => void }) {
       JSON.stringify({ userId: user.id, status: "pending", date: new Date().toISOString() }),
     );
     updateUser({ verified: true });
-    toast.success("Verification Request Received", {
-      description: "Profile details were successfully sent for verification.",
+    toast.success(t("Verification Request Received"), {
+      description: t("Profile details were successfully sent for verification."),
     });
   };
   return (
@@ -2048,7 +2049,7 @@ function Profile({ user, upgrade }: { user: Candidate; upgrade: () => void }) {
       subtitle="Keep your candidate identity polished, complete, and ready to share."
       actions={
         <Button variant="glass" onClick={() => setEditing(!editing)}>
-          {editing ? "Cancel" : "Edit profile"}
+          {editing ? t("Cancel") : t("Edit profile")}
         </Button>
       }
     >
@@ -2065,7 +2066,7 @@ function Profile({ user, upgrade }: { user: Candidate; upgrade: () => void }) {
           <div className="my-6 flex justify-center">
             <ProgressRing value={user.completion} />
           </div>
-          <p className="text-sm font-semibold">Profile Completion: {user.completion}%</p>
+          <p className="text-sm font-semibold">{t("Profile Completion:")} {user.completion}%</p>
           <Button
             variant={user.verified ? "glass" : "premium"}
             onClick={verify}
@@ -2073,61 +2074,61 @@ function Profile({ user, upgrade }: { user: Candidate; upgrade: () => void }) {
             disabled={user.verified}
           >
             <FileCheck2 />
-            {user.verified ? "Verified profile" : "Verify profile"}
+            {user.verified ? t("Verified profile") : t("Verify profile")}
           </Button>
           {user.plan === "FREE" && (
-            <p className="mt-2 text-xs text-muted-foreground">PRO feature</p>
+            <p className="mt-2 text-xs text-muted-foreground">{t("PRO feature")}</p>
           )}
         </div>
         <div className="glass-panel rounded-3xl p-5 sm:p-7">
           <div className="grid gap-5 sm:grid-cols-2">
             <ProfileField
-              label="First name"
+              label={t("First name")}
               value={form.firstName}
               disabled={!editing}
               onChange={(v) => setForm({ ...form, firstName: v })}
             />
             <ProfileField
-              label="Last name"
+              label={t("Last name")}
               value={form.lastName}
               disabled={!editing}
               onChange={(v) => setForm({ ...form, lastName: v })}
             />
-            <ProfileField label="Email" value={form.email} disabled />
+            <ProfileField label={t("Email")} value={form.email} disabled />
             <ProfileField
-              label="Phone"
+              label={t("Phone")}
               value={form.phone}
               disabled={!editing}
               onChange={(v) => setForm({ ...form, phone: v })}
             />
             <ProfileField
-              label="Headline"
+              label={t("Headline")}
               value={form.headline}
               disabled={!editing}
               onChange={(v) => setForm({ ...form, headline: v })}
               wide
             />
             <ProfileField
-              label="Location"
+              label={t("Location")}
               value={form.location}
               disabled={!editing}
               onChange={(v) => setForm({ ...form, location: v })}
             />
             <ProfileField
-              label="Education"
+              label={t("Education")}
               value={form.education ?? ""}
               disabled={!editing}
               onChange={(v) => setForm({ ...form, education: v })}
             />
             <ProfileField
-              label="Experience"
+              label={t("Experience")}
               value={form.experience ?? ""}
               disabled={!editing}
               onChange={(v) => setForm({ ...form, experience: v })}
               wide
             />
             <ProfileField
-              label="Skills"
+              label={t("Skills")}
               value={form.skills.join(", ")}
               disabled={!editing}
               onChange={(v) => setForm({ ...form, skills: v.split(",").map((s) => s.trim()) })}
@@ -2136,13 +2137,13 @@ function Profile({ user, upgrade }: { user: Candidate; upgrade: () => void }) {
           </div>
           {editing && (
             <Button variant="premium" onClick={save} className="mt-6">
-              Save changes
+              {t("Save changes")}
             </Button>
           )}
           <div className="mt-8 border-t border-border pt-6">
             <Button variant="outline" onClick={logout}>
               <LogOut />
-              Log out
+              {t("Log out")}
             </Button>
           </div>
         </div>
