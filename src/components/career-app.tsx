@@ -2180,6 +2180,7 @@ function ProfileField({
 
 function ProPage({ user }: { user: Candidate }) {
   const { updateUser } = useCareer();
+  const { t } = useT();
   const [country, setCountry] = useState("India");
   const [paying, setPaying] = useState(false);
   const pricing: Record<string, [string, string[]]> = {
@@ -2201,8 +2202,8 @@ function ProPage({ user }: { user: Candidate }) {
         JSON.stringify({ plan: "PRO", country, price, date: new Date().toISOString() }),
       );
       setPaying(false);
-      toast.success("Welcome to CareerHub PRO ✨", {
-        description: "Every premium feature is now unlocked.",
+      toast.success(t("Welcome to CareerHub PRO ✨"), {
+        description: t("Every premium feature is now unlocked."),
       });
     }, 1200);
   };
@@ -2217,25 +2218,25 @@ function ProPage({ user }: { user: Candidate }) {
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
               <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-bold text-primary">
-                MOST POPULAR
+                {t("MOST POPULAR")}
               </span>
               <h2 className="mt-5 text-3xl font-bold">CareerHub PRO</h2>
             </div>
             <div className="text-right">
               <p className="text-4xl font-bold">{price}</p>
-              <p className="text-sm text-muted-foreground">per month</p>
+              <p className="text-sm text-muted-foreground">{t("per month")}</p>
             </div>
           </div>
           <div className="my-7 grid gap-3 sm:grid-cols-2">
             {[
-              "Connect apps",
-              "Mock interviews",
-              "Profile verification",
-              "Quick Apply",
-              "Recruiter messaging",
-              "Certifications",
-              "Advanced analytics",
-              "Priority support",
+              t("Connect apps"),
+              t("Mock interviews"),
+              t("Profile verification"),
+              t("Quick Apply"),
+              t("Recruiter messaging"),
+              t("Certifications"),
+              t("Advanced analytics"),
+              t("Priority support"),
             ].map((feature) => (
               <div key={feature} className="flex items-center gap-2 text-sm">
                 <span className="grid size-5 place-items-center rounded-full bg-success/15 text-success">
@@ -2252,15 +2253,15 @@ function ProPage({ user }: { user: Candidate }) {
             className="w-full"
           >
             {user.plan === "PRO"
-              ? "Your PRO plan is active"
+              ? t("Your PRO plan is active")
               : paying
-                ? "Securing your upgrade…"
-                : "Upgrade to PRO"}
+                ? t("Securing your upgrade…")
+                : t("Upgrade to PRO")}
           </Button>
         </div>
         <div className="space-y-4">
           <div className="glass-panel rounded-3xl p-6">
-            <Label>Billing country</Label>
+            <Label>{t("Billing country")}</Label>
             <Select value={country} onValueChange={setCountry}>
               <SelectTrigger className="mt-2 h-12 rounded-xl bg-background/50">
                 <SelectValue />
@@ -2274,7 +2275,7 @@ function ProPage({ user }: { user: Candidate }) {
               </SelectContent>
             </Select>
             <p className="mt-4 text-xs text-muted-foreground">
-              Payment methods update for your region.
+              {t("Payment methods update for your region.")}
             </p>
             <div className="mt-3 flex flex-wrap gap-2">
               {methods.map((method) => (
@@ -2288,8 +2289,8 @@ function ProPage({ user }: { user: Candidate }) {
             <div className="flex items-center gap-3">
               <LockKeyhole className="text-success" />
               <div>
-                <p className="font-semibold">Secure mock checkout</p>
-                <p className="text-xs text-muted-foreground">No real payment is processed.</p>
+                <p className="font-semibold">{t("Secure mock checkout")}</p>
+                <p className="text-xs text-muted-foreground">{t("No real payment is processed.")}</p>
               </div>
             </div>
           </div>
