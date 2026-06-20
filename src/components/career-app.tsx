@@ -767,9 +767,9 @@ function Workspace() {
                 <span className="text-xs text-primary">{t("3 new")}</span>
               </div>
               {[
-                "Your application at Arc is under review",
-                "New 96% job match found",
-                "Priya from Atlassian sent a message",
+                t("Your application at Arc is under review"),
+                t("New 96% job match found"),
+                t("Priya from Atlassian sent a message"),
               ].map((text, index) => (
                 <button
                   key={text}
@@ -783,7 +783,7 @@ function Workspace() {
                   />
                   <span className="text-sm">
                     {text}
-                    <small className="mt-1 block text-muted-foreground">{index + 1}h ago</small>
+                    <small className="mt-1 block text-muted-foreground">{index + 1}{t("h ago")}</small>
                   </span>
                 </button>
               ))}
