@@ -1092,6 +1092,7 @@ function ProgressRing({ value }: { value: number }) {
 }
 
 function Applications({ apps }: { apps: Application[] }) {
+  const { t } = useT();
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState("All");
   const visible = apps.filter(
@@ -1106,7 +1107,7 @@ function Applications({ apps }: { apps: Application[] }) {
       subtitle="Search, filter, and follow every opportunity through your pipeline."
       actions={
         <span className="rounded-full bg-primary/10 px-3 py-1.5 text-xs font-semibold text-primary">
-          {visible.length} applications
+          {visible.length} {t("applications")}
         </span>
       }
     >
@@ -1117,7 +1118,7 @@ function Applications({ apps }: { apps: Application[] }) {
             aria-label="Search applications"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search role or company"
+            placeholder={t("Search role or company")}
             className="h-11 rounded-xl bg-background/60 pl-9"
           />
         </div>
@@ -1128,7 +1129,7 @@ function Applications({ apps }: { apps: Application[] }) {
           <SelectContent>
             {["All", "Applied", "Reviewing", "Interview", "Rejected", "Offer"].map((value) => (
               <SelectItem key={value} value={value}>
-                {value}
+                {t(value)}
               </SelectItem>
             ))}
           </SelectContent>
@@ -1158,8 +1159,8 @@ function Applications({ apps }: { apps: Application[] }) {
         {visible.length === 0 && (
           <Empty
             icon={BriefcaseBusiness}
-            title="No applications found"
-            copy="Try adjusting your search or filters."
+            title={t("No applications found")}
+            copy={t("Try adjusting your search or filters.")}
           />
         )}
       </div>
@@ -1167,6 +1168,7 @@ function Applications({ apps }: { apps: Application[] }) {
   );
 }
 function Status({ status }: { status: Application["status"] }) {
+  const { t } = useT();
   const classes =
     status === "Offer"
       ? "bg-success/12 text-success"
@@ -1176,7 +1178,7 @@ function Status({ status }: { status: Application["status"] }) {
           ? "bg-warning/12 text-warning"
           : "bg-primary/10 text-primary";
   return (
-    <span className={cn("rounded-full px-3 py-1.5 text-xs font-semibold", classes)}>{status}</span>
+    <span className={cn("rounded-full px-3 py-1.5 text-xs font-semibold", classes)}>{t(status)}</span>
   );
 }
 
