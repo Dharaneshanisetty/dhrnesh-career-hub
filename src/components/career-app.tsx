@@ -1184,6 +1184,7 @@ function Status({ status }: { status: Application["status"] }) {
 
 function Suggested({ user }: { user: Candidate }) {
   const { addApplication, applications } = useCareer();
+  const { t } = useT();
   const [quickOnly, setQuickOnly] = useState(false);
   const [showSaved, setShowSaved] = useState(false);
   const SAVED_KEY = `careerhub_saved_${user.id}`;
@@ -1201,10 +1202,10 @@ function Suggested({ user }: { user: Candidate }) {
   const toggleSave = (jobId: string, title: string) => {
     if (saved.includes(jobId)) {
       persistSaved(saved.filter((id) => id !== jobId));
-      toast.success(`Removed ${title} from saved`);
+      toast.success(`${t("Removed from saved")}: ${title}`);
     } else {
       persistSaved([...saved, jobId]);
-      toast.success(`Saved ${title}`);
+      toast.success(`${t("Saved")}: ${title}`);
     }
   };
   const appliedKeys = new Set(
@@ -1244,16 +1245,16 @@ function Suggested({ user }: { user: Candidate }) {
             onClick={() => setShowSaved((s) => !s)}
           >
             <Bookmark />
-            {showSaved ? "Showing saved" : `Saved jobs (${saved.length})`}
+            {showSaved ? t("Showing saved") : `${t("Saved jobs")} (${saved.length})`}
           </Button>
           {user.plan === "PRO" ? (
             <label className="glass-panel flex items-center gap-3 rounded-xl px-3 py-2 text-xs font-semibold">
               <Switch checked={quickOnly} onCheckedChange={setQuickOnly} />
-              Quick Apply only
+              {t("Quick Apply only")}
             </label>
           ) : (
             <span className="rounded-full bg-muted px-3 py-1.5 text-xs">
-              Upgrade for Quick Apply
+              {t("Upgrade for Quick Apply")}
             </span>
           )}
         </div>
@@ -1265,16 +1266,16 @@ function Suggested({ user }: { user: Candidate }) {
             <Bookmark />
           </div>
           <h3 className="mt-4 text-lg font-bold">
-            {showSaved ? "No saved jobs yet" : "No matching roles"}
+            {showSaved ? t("No saved jobs yet") : t("No matching roles")}
           </h3>
           <p className="mt-2 text-sm text-muted-foreground">
             {showSaved
-              ? "Tap the bookmark on any role to save it for later."
-              : "Try turning off filters to see all suggestions."}
+              ? t("Tap the bookmark on any role to save it for later.")
+              : t("Try turning off filters to see all suggestions.")}
           </p>
           {showSaved && (
             <Button variant="glass" className="mt-4" onClick={() => setShowSaved(false)}>
-              Browse suggestions
+              {t("Browse suggestions")}
             </Button>
           )}
         </div>
@@ -1296,7 +1297,7 @@ function Suggested({ user }: { user: Candidate }) {
                 </p>
               </div>
               <span className="ml-auto shrink-0 rounded-full bg-success/10 px-2.5 py-1 text-xs font-bold text-success">
-                {job.match}% match
+                {job.match}% {t("match")}
               </span>
             </div>
             <div className="my-5 flex flex-wrap gap-2">
@@ -1311,18 +1312,18 @@ function Suggested({ user }: { user: Candidate }) {
             </div>
             <div className="flex gap-2">
               <Button variant="glass" className="flex-1">
-                View role <ExternalLink />
+                {t("View role")} <ExternalLink />
               </Button>
               {user.plan === "PRO" && job.quick && (
                 isApplied(job) ? (
                   <Button variant="glass" disabled className="flex-1">
                     <Check />
-                    Applied
+                    {t("Applied")}
                   </Button>
                 ) : (
                   <Button variant="premium" onClick={() => setSelected(job)} className="flex-1">
                     <Zap />
-                    Quick Apply
+                    {t("Quick Apply")}
                   </Button>
                 )
               )}
@@ -1343,19 +1344,19 @@ function Suggested({ user }: { user: Candidate }) {
       <Dialog open={Boolean(selected)} onOpenChange={(open) => !open && setSelected(null)}>
         <DialogContent className="glass-panel rounded-3xl">
           <DialogHeader>
-            <DialogTitle>Quick Apply</DialogTitle>
+            <DialogTitle>{t("Quick Apply")}</DialogTitle>
             <DialogDescription>
-              Your verified CareerHub profile will be shared with {selected?.company}.
+              {t("Your verified CareerHub profile will be shared with")} {selected?.company}.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-3 rounded-2xl bg-muted/60 p-4 text-sm">
-            <Summary label="Candidate" value={`${user.firstName} ${user.lastName}`} />
-            <Summary label="Email" value={user.email} />
-            <Summary label="Resume" value={user.resume} />
+            <Summary label={t("Candidate")} value={`${user.firstName} ${user.lastName}`} />
+            <Summary label={t("Email")} value={user.email} />
+            <Summary label={t("Resume")} value={user.resume} />
           </div>
           <Button variant="premium" onClick={apply}>
             <Send />
-            Apply now
+            {t("Apply now")}
           </Button>
         </DialogContent>
       </Dialog>
