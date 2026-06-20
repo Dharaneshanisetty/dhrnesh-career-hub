@@ -1936,6 +1936,7 @@ function Messages({ user, upgrade }: { user: Candidate; upgrade: () => void }) {
 }
 
 function Integrations({ user, upgrade }: { user: Candidate; upgrade: () => void }) {
+  const { t } = useT();
   const [connected, setConnected] = useState<string[]>(() => {
     try {
       const all = JSON.parse(localStorage.getItem("careerhub_connected_apps") ?? "{}") as Record<
@@ -1955,8 +1956,8 @@ function Integrations({ user, upgrade }: { user: Candidate; upgrade: () => void 
         subtitle="Bring your job boards and coding profiles into one intelligent view."
       >
         <PremiumGate
-          title="Connect your career ecosystem"
-          copy="Sync job boards and coding platforms with CareerHub PRO."
+          title={t("Connect your career ecosystem")}
+          copy={t("Sync job boards and coding platforms with CareerHub PRO.")}
           upgrade={upgrade}
         />
       </PageIntro>
@@ -1971,17 +1972,17 @@ function Integrations({ user, upgrade }: { user: Candidate; upgrade: () => void 
       string[]
     >;
     localStorage.setItem("careerhub_connected_apps", JSON.stringify({ ...all, [user.id]: next }));
-    toast.success(next.includes(name) ? `${name} connected` : `${name} disconnected`);
+    toast.success(next.includes(name) ? `${name} ${t("connected")}` : `${name} ${t("disconnected")}`);
   };
   return (
     <PageIntro
       eyebrow="CONNECTED ECOSYSTEM"
       title="Your career, connected."
-      subtitle={`${connected.length} services are securely connected to your workspace.`}
+      subtitle={`${connected.length} ${t("services are securely connected to your workspace.")}`}
     >
       {Object.entries(platformGroups).map(([group, platforms]) => (
         <section key={group} className="mb-7">
-          <h2 className="mb-3 text-sm font-semibold text-muted-foreground">{group}</h2>
+          <h2 className="mb-3 text-sm font-semibold text-muted-foreground">{t(group)}</h2>
           <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
             {platforms.map((platform) => {
               const active = connected.includes(platform);
@@ -1993,7 +1994,7 @@ function Integrations({ user, upgrade }: { user: Candidate; upgrade: () => void 
                   <div className="min-w-0">
                     <p className="truncate font-semibold">{platform}</p>
                     <p className="text-xs text-muted-foreground">
-                      {active ? "Syncing activity" : "Not connected"}
+                      {active ? t("Syncing activity") : t("Not connected")}
                     </p>
                   </div>
                   <Button
@@ -2004,10 +2005,10 @@ function Integrations({ user, upgrade }: { user: Candidate; upgrade: () => void 
                     {active ? (
                       <>
                         <Check />
-                        Connected
+                        {t("Connected")}
                       </>
                     ) : (
-                      "Connect"
+                      t("Connect")
                     )}
                   </Button>
                 </div>
