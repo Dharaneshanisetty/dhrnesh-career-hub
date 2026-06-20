@@ -533,12 +533,13 @@ function AuthExperience() {
 }
 
 function AuthBack({ onClick }: { onClick: () => void }) {
+  const { t } = useT();
   return (
     <button
       onClick={onClick}
       className="mb-6 text-sm font-semibold text-muted-foreground hover:text-foreground"
     >
-      ← Back
+      ← {t("Back")}
     </button>
   );
 }
@@ -571,10 +572,11 @@ function Field({
   );
 }
 function DemoCredentials({ setEmail }: { setEmail: (email: string, password: string) => void }) {
+  const { t } = useT();
   return (
     <div className="mt-7 rounded-2xl border border-glass-border bg-muted/50 p-4">
       <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-        Demo access
+        {t("Demo access")}
       </p>
       <div className="grid gap-2 sm:grid-cols-2">
         <button
@@ -582,7 +584,7 @@ function DemoCredentials({ setEmail }: { setEmail: (email: string, password: str
           onClick={() => setEmail("free.demo@careerhub.com", "Free@123")}
           className="rounded-xl bg-background/70 p-3 text-left text-xs hover:bg-accent"
         >
-          <b>Free account</b>
+          <b>{t("Free account")}</b>
           <br />
           <span className="text-muted-foreground">free.demo@careerhub.com</span>
         </button>
@@ -591,7 +593,7 @@ function DemoCredentials({ setEmail }: { setEmail: (email: string, password: str
           onClick={() => setEmail("pro.demo@careerhub.com", "Pro@123")}
           className="rounded-xl bg-background/70 p-3 text-left text-xs hover:bg-accent"
         >
-          <b>PRO account</b>
+          <b>{t("PRO account")}</b>
           <br />
           <span className="text-muted-foreground">pro.demo@careerhub.com</span>
         </button>
