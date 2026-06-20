@@ -1373,6 +1373,7 @@ function PremiumGate({
   copy: string;
   upgrade: () => void;
 }) {
+  const { t } = useT();
   return (
     <div className="relative overflow-hidden rounded-3xl">
       <div className="pointer-events-none grid grid-cols-2 gap-3 opacity-45 blur-[6px]">
@@ -1387,13 +1388,14 @@ function PremiumGate({
         <h2 className="mt-4 text-2xl font-bold">{title}</h2>
         <p className="mt-2 text-sm text-muted-foreground">{copy}</p>
         <Button variant="premium" onClick={upgrade} className="mt-5">
-          Upgrade to PRO
+          {t("Upgrade to PRO")}
         </Button>
       </div>
     </div>
   );
 }
 function Interviews({ user, upgrade }: { user: Candidate; upgrade: () => void }) {
+  const { t } = useT();
   const [selected, setSelected] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
@@ -1405,8 +1407,8 @@ function Interviews({ user, upgrade }: { user: Candidate; upgrade: () => void })
         subtitle="Targeted mock sessions designed around your role."
       >
         <PremiumGate
-          title="Practice like a PRO"
-          copy="Unlock role-based mock interviews, structured feedback, and scheduling."
+          title={t("Practice like a PRO")}
+          copy={t("Unlock role-based mock interviews, structured feedback, and scheduling.")}
           upgrade={upgrade}
         />
       </PageIntro>
@@ -1417,8 +1419,8 @@ function Interviews({ user, upgrade }: { user: Candidate; upgrade: () => void })
       "careerhub_interviews",
       JSON.stringify([...entries, { userId: user.id, role: selected, date, time }]),
     );
-    toast.success("Mock interview requested", {
-      description: "We’ll inform you once it is scheduled.",
+    toast.success(t("Mock interview requested"), {
+      description: t("We’ll inform you once it is scheduled."),
     });
     setSelected("");
     setDate("");
@@ -1444,7 +1446,7 @@ function Interviews({ user, upgrade }: { user: Candidate; upgrade: () => void })
               <BriefcaseBusiness />
             </div>
             <p className="mt-5 font-semibold">{role}</p>
-            <p className="mt-1 text-xs text-muted-foreground">45 min · AI-assisted feedback</p>
+            <p className="mt-1 text-xs text-muted-foreground">{t("45 min · AI-assisted feedback")}</p>
           </button>
         ))}
       </div>
@@ -1460,18 +1462,18 @@ function Interviews({ user, upgrade }: { user: Candidate; upgrade: () => void })
       >
         <DialogContent className="glass-panel rounded-3xl">
           <DialogHeader>
-            <DialogTitle>Schedule mock interview</DialogTitle>
+            <DialogTitle>{t("Schedule mock interview")}</DialogTitle>
             <DialogDescription>
-              {selected ? `${selected} · 45 min · AI-assisted feedback` : ""}
+              {selected ? `${selected} · ${t("45 min · AI-assisted feedback")}` : ""}
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4">
-            <Field label="Date" type="date" value={date} onChange={setDate} />
+            <Field label={t("Date")} type="date" value={date} onChange={setDate} />
             <Select value={time} onValueChange={setTime}>
               <div className="space-y-2">
-                <Label>Time slot</Label>
+                <Label>{t("Time slot")}</Label>
                 <SelectTrigger className="h-12 rounded-xl bg-glass">
-                  <SelectValue placeholder="Select a time" />
+                  <SelectValue placeholder={t("Select a time")} />
                 </SelectTrigger>
               </div>
               <SelectContent>
@@ -1483,7 +1485,7 @@ function Interviews({ user, upgrade }: { user: Candidate; upgrade: () => void })
               </SelectContent>
             </Select>
             <Button variant="premium" disabled={!date || !time} onClick={schedule}>
-              Setup interview
+              {t("Setup interview")}
             </Button>
           </div>
         </DialogContent>
