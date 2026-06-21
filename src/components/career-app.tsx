@@ -737,7 +737,7 @@ function Workspace() {
                 className="flex h-9 w-auto gap-1.5 rounded-full border-border/60 bg-background/60 px-2.5 text-xs font-medium sm:gap-2 sm:px-3"
               >
                 <Globe className="size-4 opacity-70" />
-                <SelectValue className="hidden sm:inline" />
+                <SelectValue />
               </SelectTrigger>
               <SelectContent align="end">
                 {LANGUAGES.map((l) => (
