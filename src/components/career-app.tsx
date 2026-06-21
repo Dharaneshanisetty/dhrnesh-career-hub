@@ -161,7 +161,7 @@ export function CareerApp() {
 
 function AuthExperience() {
   const { login, register, toggleTheme, theme } = useCareer();
-  const { t } = useT();
+  const { t, lang, setLang } = useT();
   const [mode, setMode] = useState<"welcome" | "login" | "register" | "otp">("welcome");
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
