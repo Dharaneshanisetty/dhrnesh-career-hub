@@ -161,7 +161,7 @@ export function CareerApp() {
 
 function AuthExperience() {
   const { login, register, toggleTheme, theme } = useCareer();
-  const { t } = useT();
+  const { t, lang, setLang } = useT();
   const [mode, setMode] = useState<"welcome" | "login" | "register" | "otp">("welcome");
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -237,15 +237,32 @@ function AuthExperience() {
   return (
     <main className="relative min-h-dvh overflow-hidden ambient-bg p-4 sm:p-8">
       <div className="pointer-events-none absolute -left-24 top-20 size-80 rounded-full bg-primary/15 blur-3xl ambient-float" />
-      <Button
-        variant="glass"
-        size="icon"
-        aria-label="Toggle theme"
-        onClick={toggleTheme}
-        className="absolute right-5 top-5 z-20"
-      >
-        {theme === "light" ? <Moon /> : <Sun />}
-      </Button>
+      <div className="absolute right-5 top-5 z-20 flex items-center gap-2">
+        <Select value={lang} onValueChange={(v) => setLang(v as Lang)}>
+          <SelectTrigger
+            aria-label={t("Language")}
+            className="h-9 w-auto gap-2 rounded-full border-border/60 bg-background/60 px-3 text-xs font-medium"
+          >
+            <Globe className="size-4 opacity-70" />
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent align="end">
+            {LANGUAGES.map((l) => (
+              <SelectItem key={l.code} value={l.code}>
+                {l.native}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <Button
+          variant="glass"
+          size="icon"
+          aria-label="Toggle theme"
+          onClick={toggleTheme}
+        >
+          {theme === "light" ? <Moon /> : <Sun />}
+        </Button>
+      </div>
       <div className="mx-auto flex min-h-[calc(100dvh-2rem)] max-w-6xl items-center justify-center sm:min-h-[calc(100dvh-4rem)]">
         <motion.section
           layout
@@ -717,7 +734,7 @@ function Workspace() {
             <Select value={lang} onValueChange={(v) => setLang(v as Lang)}>
               <SelectTrigger
                 aria-label={t("Language")}
-                className="hidden h-9 w-auto gap-2 rounded-full border-border/60 bg-background/60 px-3 text-xs font-medium sm:flex"
+                className="flex h-9 w-auto gap-1.5 rounded-full border-border/60 bg-background/60 px-2.5 text-xs font-medium sm:gap-2 sm:px-3"
               >
                 <Globe className="size-4 opacity-70" />
                 <SelectValue />
