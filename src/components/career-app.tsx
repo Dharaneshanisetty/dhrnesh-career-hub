@@ -1550,7 +1550,14 @@ function Certifications({ user, upgrade }: { user: Candidate; upgrade: () => voi
           <Input
             aria-label="Search certifications"
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              if (e.target.value.length > 2)
+                trackEvent("Search Performed", {
+                  search_query: e.target.value,
+                  feature_name: "certifications",
+                });
+            }}
             placeholder={t("Search catalog")}
             className="h-10 rounded-xl bg-glass pl-9"
           />
@@ -2220,6 +2227,12 @@ function ProPage({ user }: { user: Candidate }) {
   const [price, methods] = pricing[country];
   const upgrade = () => {
     setPaying(true);
+    trackEvent("Button Clicked", {
+      button_name: "upgrade_to_pro",
+      feature_name: "subscription",
+      country,
+      price,
+    });
     setTimeout(() => {
       updateUser({ plan: "PRO" });
       localStorage.setItem(
@@ -2227,6 +2240,11 @@ function ProPage({ user }: { user: Candidate }) {
         JSON.stringify({ plan: "PRO", country, price, date: new Date().toISOString() }),
       );
       setPaying(false);
+      trackEvent("Feature Used", {
+        feature_name: "pro_upgrade_completed",
+        country,
+        price,
+      });
       toast.success(t("Welcome to CareerHub PRO ✨"), {
         description: t("Every premium feature is now unlocked."),
       });
