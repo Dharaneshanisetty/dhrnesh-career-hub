@@ -78,6 +78,7 @@ import {
 import { useCareer } from "@/context/career-context";
 import { useT, LANGUAGES, type Lang } from "@/lib/i18n";
 import { Globe } from "lucide-react";
+import { trackEvent } from "@/lib/mixpanel";
 
 type Page =
   | "dashboard"
@@ -1134,7 +1135,14 @@ function Applications({ apps }: { apps: Application[] }) {
           <Input
             aria-label="Search applications"
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              if (e.target.value.length > 2)
+                trackEvent("Search Performed", {
+                  search_query: e.target.value,
+                  feature_name: "jobs_applied",
+                });
+            }}
             placeholder={t("Search role or company")}
             className="h-11 rounded-xl bg-background/60 pl-9"
           />
