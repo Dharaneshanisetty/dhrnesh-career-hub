@@ -124,7 +124,6 @@ export function CareerProvider({ children }: { children: ReactNode }) {
           project_type: "job_application",
           project_id: application.id,
           company: application.company,
-          role: application.role,
         });
         trackEvent("Feature Used", { feature_name: "quick_apply" });
         toast.success("Job successfully applied");
