@@ -12,6 +12,7 @@ import {
   type Application,
   type Candidate,
 } from "@/lib/career-store";
+import { identifyUser, resetUser, trackEvent } from "@/lib/mixpanel";
 
 type CareerContextValue = {
   user: Candidate | null;
@@ -40,7 +41,16 @@ export function CareerProvider({ children }: { children: ReactNode }) {
     const sessionId = localStorage.getItem(SESSION_KEY);
     setTheme(savedTheme);
     document.documentElement.classList.toggle("dark", savedTheme === "dark");
-    setUser(readUsers().find((candidate) => candidate.id === sessionId) ?? null);
+    const restored = readUsers().find((candidate) => candidate.id === sessionId) ?? null;
+    setUser(restored);
+    if (restored) {
+      identifyUser(restored.id, {
+        $name: `${restored.firstName} ${restored.lastName}`,
+        $email: restored.email,
+        plan: restored.plan,
+        user_role: restored.plan,
+      });
+    }
     setApplications(readApplications());
     setReady(true);
   }, []);
@@ -60,28 +70,63 @@ export function CareerProvider({ children }: { children: ReactNode }) {
         if (!match) return false;
         localStorage.setItem(SESSION_KEY, match.id);
         setUser(match);
+        identifyUser(match.id, {
+          $name: `${match.firstName} ${match.lastName}`,
+          $email: match.email,
+          plan: match.plan,
+          user_role: match.plan,
+        });
+        trackEvent("User Logged In", {
+          user_id: match.id,
+          method: password === "123456" ? "otp" : "password",
+          user_role: match.plan,
+        });
         return true;
       },
       logout: () => {
+        trackEvent("User Logged Out", { user_id: user?.id });
         localStorage.removeItem(SESSION_KEY);
         setUser(null);
+        resetUser();
       },
       register: (candidate) => {
         const users = [...readUsers(), candidate];
         saveUsers(users);
         localStorage.setItem(SESSION_KEY, candidate.id);
         setUser(candidate);
+        identifyUser(candidate.id, {
+          $name: `${candidate.firstName} ${candidate.lastName}`,
+          $email: candidate.email,
+          plan: candidate.plan,
+          user_role: candidate.plan,
+        });
+        trackEvent("User Signed Up", {
+          user_id: candidate.id,
+          user_role: candidate.plan,
+        });
       },
       updateUser: (changes) => {
         if (!user) return;
         const updated = { ...user, ...changes };
         saveUsers(readUsers().map((item) => (item.id === user.id ? updated : item)));
         setUser(updated);
+        trackEvent("Project Updated", {
+          project_type: "profile",
+          project_id: user.id,
+          fields: Object.keys(changes),
+        });
       },
       addApplication: (application) => {
         const next = [application, ...readApplications()];
         saveApplications(next);
         setApplications(next);
+        trackEvent("Project Created", {
+          project_type: "job_application",
+          project_id: application.id,
+          company: application.company,
+          role: application.role,
+        });
+        trackEvent("Feature Used", { feature_name: "quick_apply" });
         toast.success("Job successfully applied");
       },
       toggleTheme: () => {
