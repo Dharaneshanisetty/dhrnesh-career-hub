@@ -60,6 +60,11 @@ export function initMixpanel(): void {
     enabled = true;
     // eslint-disable-next-line no-console
     console.log("Mixpanel initialized successfully");
+    try {
+      mixpanel.track("App Loaded", baseProperties());
+    } catch {
+      /* noop */
+    }
   } catch (error) {
     // eslint-disable-next-line no-console
     console.warn("[mixpanel] initialization failed", error);
