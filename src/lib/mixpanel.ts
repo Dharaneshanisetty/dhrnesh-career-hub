@@ -4,8 +4,8 @@ import mixpanel, { type OverridedMixpanel } from "mixpanel-browser";
  * Analytics module — thin wrapper around mixpanel-browser.
  *
  * Reads the project token from `VITE_MIXPANEL_TOKEN` (see `.env`).
- * The whole module is a no-op when the token is missing so the app
- * continues to work without analytics configured.
+ * When the token is missing the module becomes a safe no-op so the
+ * app keeps working without analytics configured.
  */
 
 const TOKEN = import.meta.env.VITE_MIXPANEL_TOKEN as string | undefined;
@@ -45,19 +45,21 @@ export function initMixpanel(): void {
   if (typeof window === "undefined") return;
   initialized = true;
   if (!TOKEN) {
-    // Missing token: leave analytics disabled but do not throw.
     // eslint-disable-next-line no-console
-    console.info("[mixpanel] VITE_MIXPANEL_TOKEN not set — analytics disabled.");
+    console.warn("Mixpanel disabled: missing VITE_MIXPANEL_TOKEN");
     return;
   }
   try {
     mixpanel.init(TOKEN, {
+      debug: true,
       track_pageview: true,
       persistence: "localStorage",
-      debug: import.meta.env.DEV,
-      ignore_dnt: true,
-    });
+      autocapture: true,
+      ignore_dnt: false,
+    } as Parameters<typeof mixpanel.init>[1]);
     enabled = true;
+    // eslint-disable-next-line no-console
+    console.log("Mixpanel initialized successfully");
   } catch (error) {
     // eslint-disable-next-line no-console
     console.warn("[mixpanel] initialization failed", error);
@@ -113,3 +115,5 @@ export function trackError(error: unknown, context: Record<string, unknown> = {}
 
 export const mixpanelInstance: OverridedMixpanel = mixpanel;
 export const isAnalyticsEnabled = (): boolean => enabled;
+
+export default mixpanel;
