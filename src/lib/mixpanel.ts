@@ -115,3 +115,5 @@ export function trackError(error: unknown, context: Record<string, unknown> = {}
 
 export const mixpanelInstance: OverridedMixpanel = mixpanel;
 export const isAnalyticsEnabled = (): boolean => enabled;
+
+export default mixpanel;
