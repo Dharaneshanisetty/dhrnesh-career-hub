@@ -80,6 +80,18 @@ import { useT, LANGUAGES, type Lang } from "@/lib/i18n";
 import { Globe } from "lucide-react";
 import { trackEvent } from "@/lib/mixpanel";
 import { useNavigate, useRouterState } from "@tanstack/react-router";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 type Page =
   | "dashboard"
