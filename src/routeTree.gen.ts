@@ -9,12 +9,66 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SuggestedJobsRouteImport } from './routes/suggested-jobs'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as ProRouteImport } from './routes/pro'
+import { Route as MockInterviewsRouteImport } from './routes/mock-interviews'
+import { Route as MessagesRouteImport } from './routes/messages'
+import { Route as JobsAppliedRouteImport } from './routes/jobs-applied'
+import { Route as IntegrationsRouteImport } from './routes/integrations'
+import { Route as CertificationsRouteImport } from './routes/certifications'
 import { Route as IndexRouteImport } from './routes/index'
 
+const SuggestedJobsRoute = SuggestedJobsRouteImport.update({
+  id: '/suggested-jobs',
+  path: '/suggested-jobs',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProRoute = ProRouteImport.update({
+  id: '/pro',
+  path: '/pro',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MockInterviewsRoute = MockInterviewsRouteImport.update({
+  id: '/mock-interviews',
+  path: '/mock-interviews',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MessagesRoute = MessagesRouteImport.update({
+  id: '/messages',
+  path: '/messages',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JobsAppliedRoute = JobsAppliedRouteImport.update({
+  id: '/jobs-applied',
+  path: '/jobs-applied',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IntegrationsRoute = IntegrationsRouteImport.update({
+  id: '/integrations',
+  path: '/integrations',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CertificationsRoute = CertificationsRouteImport.update({
+  id: '/certifications',
+  path: '/certifications',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -25,37 +79,170 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/certifications': typeof CertificationsRoute
+  '/integrations': typeof IntegrationsRoute
+  '/jobs-applied': typeof JobsAppliedRoute
+  '/messages': typeof MessagesRoute
+  '/mock-interviews': typeof MockInterviewsRoute
+  '/pro': typeof ProRoute
+  '/profile': typeof ProfileRoute
+  '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/suggested-jobs': typeof SuggestedJobsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/certifications': typeof CertificationsRoute
+  '/integrations': typeof IntegrationsRoute
+  '/jobs-applied': typeof JobsAppliedRoute
+  '/messages': typeof MessagesRoute
+  '/mock-interviews': typeof MockInterviewsRoute
+  '/pro': typeof ProRoute
+  '/profile': typeof ProfileRoute
+  '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/suggested-jobs': typeof SuggestedJobsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/certifications': typeof CertificationsRoute
+  '/integrations': typeof IntegrationsRoute
+  '/jobs-applied': typeof JobsAppliedRoute
+  '/messages': typeof MessagesRoute
+  '/mock-interviews': typeof MockInterviewsRoute
+  '/pro': typeof ProRoute
+  '/profile': typeof ProfileRoute
+  '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/suggested-jobs': typeof SuggestedJobsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/sitemap.xml'
+  fullPaths:
+    | '/'
+    | '/certifications'
+    | '/integrations'
+    | '/jobs-applied'
+    | '/messages'
+    | '/mock-interviews'
+    | '/pro'
+    | '/profile'
+    | '/settings'
+    | '/sitemap.xml'
+    | '/suggested-jobs'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/sitemap.xml'
-  id: '__root__' | '/' | '/sitemap.xml'
+  to:
+    | '/'
+    | '/certifications'
+    | '/integrations'
+    | '/jobs-applied'
+    | '/messages'
+    | '/mock-interviews'
+    | '/pro'
+    | '/profile'
+    | '/settings'
+    | '/sitemap.xml'
+    | '/suggested-jobs'
+  id:
+    | '__root__'
+    | '/'
+    | '/certifications'
+    | '/integrations'
+    | '/jobs-applied'
+    | '/messages'
+    | '/mock-interviews'
+    | '/pro'
+    | '/profile'
+    | '/settings'
+    | '/sitemap.xml'
+    | '/suggested-jobs'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CertificationsRoute: typeof CertificationsRoute
+  IntegrationsRoute: typeof IntegrationsRoute
+  JobsAppliedRoute: typeof JobsAppliedRoute
+  MessagesRoute: typeof MessagesRoute
+  MockInterviewsRoute: typeof MockInterviewsRoute
+  ProRoute: typeof ProRoute
+  ProfileRoute: typeof ProfileRoute
+  SettingsRoute: typeof SettingsRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  SuggestedJobsRoute: typeof SuggestedJobsRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/suggested-jobs': {
+      id: '/suggested-jobs'
+      path: '/suggested-jobs'
+      fullPath: '/suggested-jobs'
+      preLoaderRoute: typeof SuggestedJobsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sitemap.xml': {
       id: '/sitemap.xml'
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pro': {
+      id: '/pro'
+      path: '/pro'
+      fullPath: '/pro'
+      preLoaderRoute: typeof ProRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mock-interviews': {
+      id: '/mock-interviews'
+      path: '/mock-interviews'
+      fullPath: '/mock-interviews'
+      preLoaderRoute: typeof MockInterviewsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/messages': {
+      id: '/messages'
+      path: '/messages'
+      fullPath: '/messages'
+      preLoaderRoute: typeof MessagesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/jobs-applied': {
+      id: '/jobs-applied'
+      path: '/jobs-applied'
+      fullPath: '/jobs-applied'
+      preLoaderRoute: typeof JobsAppliedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/integrations': {
+      id: '/integrations'
+      path: '/integrations'
+      fullPath: '/integrations'
+      preLoaderRoute: typeof IntegrationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/certifications': {
+      id: '/certifications'
+      path: '/certifications'
+      fullPath: '/certifications'
+      preLoaderRoute: typeof CertificationsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -70,8 +257,27 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CertificationsRoute: CertificationsRoute,
+  IntegrationsRoute: IntegrationsRoute,
+  JobsAppliedRoute: JobsAppliedRoute,
+  MessagesRoute: MessagesRoute,
+  MockInterviewsRoute: MockInterviewsRoute,
+  ProRoute: ProRoute,
+  ProfileRoute: ProfileRoute,
+  SettingsRoute: SettingsRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  SuggestedJobsRoute: SuggestedJobsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
