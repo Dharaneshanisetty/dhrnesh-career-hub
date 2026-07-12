@@ -79,6 +79,7 @@ import { useCareer } from "@/context/career-context";
 import { useT, LANGUAGES, type Lang } from "@/lib/i18n";
 import { Globe } from "lucide-react";
 import { trackEvent } from "@/lib/mixpanel";
+import { useNavigate, useRouterState } from "@tanstack/react-router";
 
 type Page =
   | "dashboard"
@@ -91,6 +92,23 @@ type Page =
   | "profile"
   | "pro"
   | "settings";
+
+export const PAGE_TO_PATH: Record<Page, string> = {
+  dashboard: "/",
+  applications: "/jobs-applied",
+  jobs: "/suggested-jobs",
+  interviews: "/mock-interviews",
+  certifications: "/certifications",
+  messages: "/messages",
+  integrations: "/integrations",
+  profile: "/profile",
+  pro: "/pro",
+  settings: "/settings",
+};
+const PATH_TO_PAGE: Record<string, Page> = Object.fromEntries(
+  Object.entries(PAGE_TO_PATH).map(([p, path]) => [path, p as Page]),
+) as Record<string, Page>;
+
 const nav: { page: Page; label: string; icon: typeof LayoutDashboard }[] = [
   { page: "dashboard", label: "Overview", icon: LayoutDashboard },
   { page: "applications", label: "Jobs Applied", icon: BriefcaseBusiness },
@@ -623,13 +641,15 @@ function DemoCredentials({ setEmail }: { setEmail: (email: string, password: str
 function Workspace() {
   const { user, applications, theme, toggleTheme } = useCareer();
   const { t, lang, setLang } = useT();
-  const [page, setPage] = useState<Page>("dashboard");
+  const routerNavigate = useNavigate();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const page: Page = PATH_TO_PAGE[pathname] ?? "dashboard";
   const [mobileOpen, setMobileOpen] = useState(false);
   const [notifications, setNotifications] = useState(false);
   if (!user) return null;
   const userApps = applications.filter((app) => app.userId === user.id);
   const navigate = (next: Page) => {
-    setPage(next);
+    routerNavigate({ to: PAGE_TO_PATH[next] });
     setMobileOpen(false);
   };
   return (
@@ -735,10 +755,12 @@ function Workspace() {
             <Select value={lang} onValueChange={(v) => setLang(v as Lang)}>
               <SelectTrigger
                 aria-label={t("Language")}
-                className="flex h-9 w-auto gap-1.5 rounded-full border-border/60 bg-background/60 px-2.5 text-xs font-medium sm:gap-2 sm:px-3"
+                className="flex h-9 w-9 shrink-0 items-center justify-center gap-0 rounded-full border-border/60 bg-background/60 p-0 text-xs font-medium [&>svg:last-child]:hidden sm:h-9 sm:w-auto sm:gap-2 sm:px-3"
               >
                 <Globe className="size-4 opacity-70" />
-                <SelectValue />
+                <span className="hidden sm:inline">
+                  <SelectValue />
+                </span>
               </SelectTrigger>
               <SelectContent align="end">
                 {LANGUAGES.map((l) => (
