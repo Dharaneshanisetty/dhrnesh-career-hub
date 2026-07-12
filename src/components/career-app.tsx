@@ -764,15 +764,14 @@ function Workspace() {
             </p>
           </div>
           <div className="flex shrink-0 items-center gap-1 sm:gap-2">
+            {/* Desktop / tablet inline actions */}
             <Select value={lang} onValueChange={(v) => setLang(v as Lang)}>
               <SelectTrigger
                 aria-label={t("Language")}
-                className="flex h-9 w-9 shrink-0 items-center justify-center gap-0 rounded-full border-border/60 bg-background/60 p-0 text-xs font-medium [&>svg:last-child]:hidden sm:h-9 sm:w-auto sm:gap-2 sm:px-3"
+                className="hidden h-9 w-auto gap-2 rounded-full border-border/60 bg-background/60 px-3 text-xs font-medium sm:flex"
               >
                 <Globe className="size-4 opacity-70" />
-                <span className="hidden sm:inline">
-                  <SelectValue />
-                </span>
+                <SelectValue />
               </SelectTrigger>
               <SelectContent align="end">
                 {LANGUAGES.map((l) => (
@@ -793,24 +792,132 @@ function Workspace() {
             <Button
               variant={user.plan === "PRO" ? "premium" : "glass"}
               onClick={() => navigate("pro")}
-              className="px-3"
+              className="hidden px-3 sm:inline-flex"
             >
               <Crown />
-              <span className="hidden sm:inline">{user.plan === "PRO" ? "PRO" : t("Upgrade")}</span>
+              <span>{user.plan === "PRO" ? "PRO" : t("Upgrade")}</span>
             </Button>
             <Button
               variant="ghost"
               size="icon"
               aria-label={t("Notifications")}
               onClick={() => setNotifications(!notifications)}
-              className="relative"
+              className="relative min-h-11 min-w-11"
             >
               <Bell />
-              <span className="absolute right-2 top-2 size-2 rounded-full bg-primary" />
+              <span className="absolute right-2.5 top-2.5 size-2 rounded-full bg-primary" />
             </Button>
-            <Button variant="ghost" size="icon" aria-label="Toggle theme" onClick={toggleTheme}>
+            <Button
+              variant="ghost"
+              size="icon"
+              aria-label="Toggle theme"
+              onClick={toggleTheme}
+              className="hidden sm:inline-flex"
+            >
               {theme === "light" ? <Moon /> : <Sun />}
             </Button>
+
+            {/* Account menu — always visible, primary account entry point on mobile */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  aria-label={t("Account menu")}
+                  className="ml-1 flex min-h-11 min-w-11 items-center gap-2 rounded-full border border-border/60 bg-background/60 p-1 pr-1 text-left transition hover:bg-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:pr-3"
+                >
+                  <span className="grid size-8 shrink-0 place-items-center rounded-full bg-primary/15 text-xs font-bold text-primary">
+                    {user.firstName[0]}
+                    {user.lastName[0]}
+                  </span>
+                  <span className="hidden min-w-0 flex-col leading-tight sm:flex">
+                    <span className="truncate text-xs font-semibold">
+                      {user.firstName} {user.lastName}
+                    </span>
+                    <span className="truncate text-[10px] font-medium uppercase tracking-wider text-primary">
+                      {user.plan}
+                    </span>
+                  </span>
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" sideOffset={8} className="w-72">
+                <div className="flex items-center gap-3 p-3">
+                  <div className="grid size-11 shrink-0 place-items-center rounded-full bg-primary/15 font-bold text-primary">
+                    {user.firstName[0]}
+                    {user.lastName[0]}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-semibold">
+                      {user.firstName} {user.lastName}
+                    </p>
+                    <p className="truncate text-xs text-muted-foreground">{user.email}</p>
+                    <p className="mt-1 inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary">
+                      {user.plan} {t("plan")}
+                    </p>
+                  </div>
+                </div>
+                <DropdownMenuSeparator />
+                <DropdownMenuGroup>
+                  <DropdownMenuItem onSelect={() => navigate("profile")} className="gap-2 py-2.5">
+                    <CircleUserRound className="size-4" /> {t("Profile")}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onSelect={() => navigate("pro")}
+                    className="gap-2 py-2.5 sm:hidden"
+                  >
+                    <Crown className="size-4" />
+                    {user.plan === "PRO" ? "PRO" : t("Upgrade")}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onSelect={() => navigate("integrations")}
+                    className="gap-2 py-2.5 sm:hidden"
+                  >
+                    <Plug className="size-4" /> {t("Connect apps")}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => navigate("settings")} className="gap-2 py-2.5">
+                    <Settings className="size-4" /> {t("Settings")}
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator className="sm:hidden" />
+                <DropdownMenuGroup className="sm:hidden">
+                  <DropdownMenuSub>
+                    <DropdownMenuSubTrigger className="gap-2 py-2.5">
+                      <Globe className="size-4" /> {t("Language")}
+                      <span className="ml-auto text-xs text-muted-foreground">
+                        {LANGUAGES.find((l) => l.code === lang)?.native}
+                      </span>
+                    </DropdownMenuSubTrigger>
+                    <DropdownMenuSubContent className="max-h-72 overflow-y-auto">
+                      {LANGUAGES.map((l) => (
+                        <DropdownMenuItem
+                          key={l.code}
+                          onSelect={() => setLang(l.code as Lang)}
+                          className="gap-2"
+                        >
+                          {l.code === lang && <Check className="size-3.5" />}
+                          <span className={l.code === lang ? "font-semibold" : ""}>{l.native}</span>
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuSubContent>
+                  </DropdownMenuSub>
+                  <DropdownMenuItem
+                    onSelect={(e) => {
+                      e.preventDefault();
+                      toggleTheme();
+                    }}
+                    className="gap-2 py-2.5"
+                  >
+                    {theme === "light" ? <Moon className="size-4" /> : <Sun className="size-4" />}
+                    {theme === "light" ? t("Dark mode") : t("Light mode")}
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onSelect={() => logout()}
+                  className="gap-2 py-2.5 text-destructive focus:text-destructive"
+                >
+                  <LogOut className="size-4" /> {t("Log out")}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
           {notifications && (
             <div className="glass-panel absolute right-4 top-16 w-[min(24rem,calc(100vw-2rem))] rounded-2xl p-3 shadow-glass">
