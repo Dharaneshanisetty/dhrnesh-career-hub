@@ -759,7 +759,7 @@ function Workspace() {
           </Button>
           <div className="min-w-0">
             <p className="truncate text-sm font-bold sm:text-base">{t(pageTitles[page])}</p>
-            <p className="hidden text-xs text-muted-foreground sm:block">
+            <p className="hidden truncate text-xs text-muted-foreground lg:block">
               {t("Your intelligent career workspace")}
             </p>
           </div>
