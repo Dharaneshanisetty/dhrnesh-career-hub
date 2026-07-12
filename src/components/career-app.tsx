@@ -868,7 +868,7 @@ function Workspace() {
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onSelect={() => navigate("integrations")}
-                    className="gap-2 py-2.5 sm:hidden"
+                    className="gap-2 py-2.5 lg:hidden"
                   >
                     <Plug className="size-4" /> {t("Connect apps")}
                   </DropdownMenuItem>
@@ -876,8 +876,8 @@ function Workspace() {
                     <Settings className="size-4" /> {t("Settings")}
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
-                <DropdownMenuSeparator className="sm:hidden" />
-                <DropdownMenuGroup className="sm:hidden">
+                <DropdownMenuSeparator className="lg:hidden" />
+                <DropdownMenuGroup className="lg:hidden">
                   <DropdownMenuSub>
                     <DropdownMenuSubTrigger className="gap-2 py-2.5">
                       <Globe className="size-4" /> {t("Language")}
