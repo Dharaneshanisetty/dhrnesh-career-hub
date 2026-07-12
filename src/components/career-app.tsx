@@ -651,7 +651,7 @@ function DemoCredentials({ setEmail }: { setEmail: (email: string, password: str
 }
 
 function Workspace() {
-  const { user, applications, theme, toggleTheme } = useCareer();
+  const { user, applications, theme, toggleTheme, logout } = useCareer();
   const { t, lang, setLang } = useT();
   const routerNavigate = useNavigate();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
