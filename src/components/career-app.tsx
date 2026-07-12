@@ -768,7 +768,7 @@ function Workspace() {
             <Select value={lang} onValueChange={(v) => setLang(v as Lang)}>
               <SelectTrigger
                 aria-label={t("Language")}
-                className="hidden h-9 w-auto gap-2 rounded-full border-border/60 bg-background/60 px-3 text-xs font-medium sm:flex"
+                className="hidden h-9 w-auto gap-2 rounded-full border-border/60 bg-background/60 px-3 text-xs font-medium lg:flex"
               >
                 <Globe className="size-4 opacity-70" />
                 <SelectValue />
@@ -783,7 +783,7 @@ function Workspace() {
             </Select>
             <Button
               variant="glass"
-              className="hidden sm:flex"
+              className="hidden lg:flex"
               onClick={() => navigate("integrations")}
             >
               <Plug />
@@ -812,7 +812,7 @@ function Workspace() {
               size="icon"
               aria-label="Toggle theme"
               onClick={toggleTheme}
-              className="hidden sm:inline-flex"
+              className="hidden lg:inline-flex"
             >
               {theme === "light" ? <Moon /> : <Sun />}
             </Button>
