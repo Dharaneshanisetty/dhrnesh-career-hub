@@ -747,7 +747,7 @@ function Workspace() {
         />
       )}
       <section className="min-h-dvh lg:pl-[18rem]">
-        <header className="sticky top-0 z-20 grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 border-b border-border/60 bg-background/65 px-4 py-3 backdrop-blur-2xl sm:px-7">
+        <header className="sticky top-0 z-20 grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 border-b border-border/60 bg-background/65 px-4 py-3 backdrop-blur-2xl sm:px-7 lg:grid-cols-[minmax(0,1fr)_auto]">
           <Button
             variant="glass"
             size="icon"
