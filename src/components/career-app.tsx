@@ -1305,14 +1305,16 @@ function Applications({ apps }: { apps: Application[] }) {
         {visible.map((app) => (
           <div
             key={app.id}
-            className="glass-panel grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 rounded-2xl p-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,130px)_minmax(0,130px)_auto] sm:p-5"
+            className="glass-panel grid grid-cols-[minmax(0,1fr)_minmax(0,96px)] items-start gap-4 rounded-2xl p-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,130px)_minmax(0,130px)_minmax(0,110px)] sm:p-5"
           >
-            <div className="min-w-0">
-              <p className="truncate font-semibold">{app.title}</p>
-              <p className="truncate text-sm text-muted-foreground">{app.company}</p>
+            <div className="min-w-0 max-w-full">
+              <p className="break-words font-semibold">{app.title}</p>
+              <p className="break-words text-sm text-muted-foreground">{app.company}</p>
             </div>
-            <p className="hidden truncate text-sm text-muted-foreground sm:block">{app.location}</p>
-            <p className="hidden truncate text-sm text-muted-foreground sm:block">
+            <p className="hidden min-w-0 max-w-[130px] break-words text-sm text-muted-foreground sm:block">
+              {app.location}
+            </p>
+            <p className="hidden min-w-0 max-w-[130px] break-words text-sm text-muted-foreground sm:block">
               {new Date(app.date).toLocaleDateString("en", {
                 month: "short",
                 day: "numeric",
@@ -1344,7 +1346,14 @@ function Status({ status }: { status: Application["status"] }) {
           ? "bg-warning/12 text-warning"
           : "bg-primary/10 text-primary";
   return (
-    <span className={cn("rounded-full px-3 py-1.5 text-xs font-semibold", classes)}>{t(status)}</span>
+    <span
+      className={cn(
+        "inline-flex min-w-0 max-w-24 justify-center justify-self-end whitespace-normal break-words rounded-full px-3 py-1.5 text-center text-xs font-semibold sm:max-w-[110px] sm:justify-self-start",
+        classes,
+      )}
+    >
+      {t(status)}
+    </span>
   );
 }
 
