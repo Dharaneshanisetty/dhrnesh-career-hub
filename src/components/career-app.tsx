@@ -1305,24 +1305,21 @@ function Applications({ apps }: { apps: Application[] }) {
         {visible.map((app) => (
           <div
             key={app.id}
-            className="glass-panel flex flex-col gap-3 rounded-2xl p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5"
+            className="glass-panel grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 rounded-2xl p-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,130px)_minmax(0,130px)_auto] sm:p-5"
           >
-            <div className="min-w-0 flex-1">
+            <div className="min-w-0">
               <p className="truncate font-semibold">{app.title}</p>
-              <p className="text-sm text-muted-foreground">{app.company}</p>
+              <p className="truncate text-sm text-muted-foreground">{app.company}</p>
             </div>
-            <div className="flex flex-wrap items-center gap-2 sm:gap-4">
-              <span className="text-sm text-muted-foreground">{app.location}</span>
-              <span className="text-sm text-muted-foreground opacity-50">·</span>
-              <span className="text-sm text-muted-foreground">
-                {new Date(app.date).toLocaleDateString("en", {
-                  month: "short",
-                  day: "numeric",
-                  year: "numeric",
-                })}
-              </span>
-              <Status status={app.status} />
-            </div>
+            <p className="hidden truncate text-sm text-muted-foreground sm:block">{app.location}</p>
+            <p className="hidden truncate text-sm text-muted-foreground sm:block">
+              {new Date(app.date).toLocaleDateString("en", {
+                month: "short",
+                day: "numeric",
+                year: "numeric",
+              })}
+            </p>
+            <Status status={app.status} />
           </div>
         ))}
         {visible.length === 0 && (
