@@ -8,12 +8,9 @@ import mixpanel, { type OverridedMixpanel } from "mixpanel-browser";
  * app keeps working without analytics configured.
  */
 
-// Mixpanel project tokens are publishable (safe to ship to the browser).
-// The env var takes precedence; the fallback keeps analytics working on
-// the deployed Lovable site even when the build env is not configured.
-const TOKEN =
-  (import.meta.env.VITE_MIXPANEL_TOKEN as string | undefined) ||
-  "15f816b99ab300d896d24d457ed51c4f";
+// Mixpanel project tokens are publishable (safe to ship to the browser),
+// but the value is read only from the build environment — never hardcoded.
+const TOKEN = (import.meta.env.VITE_MIXPANEL_TOKEN as string | undefined)?.trim();
 
 let initialized = false;
 let enabled = false;
@@ -50,8 +47,10 @@ export function initMixpanel(): void {
   if (typeof window === "undefined") return;
   initialized = true;
   if (!TOKEN) {
-    // eslint-disable-next-line no-console
-    console.warn("Mixpanel disabled: missing VITE_MIXPANEL_TOKEN");
+    if (import.meta.env.DEV) {
+      // eslint-disable-next-line no-console
+      console.warn("Mixpanel disabled: missing VITE_MIXPANEL_TOKEN");
+    }
     return;
   }
   try {
